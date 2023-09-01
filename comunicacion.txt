@@ -1,0 +1,5 @@
+roles por ahora 
+
+Ian encargado de los estilos de las paginas
+Agustin encargado del algoritmo de la pagina 
+Alejandro ayuda en el algoritmo y base de datos
