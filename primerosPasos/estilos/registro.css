@@ -36,11 +36,10 @@ input[type="submit"]:hover{
 }
 body{
     background-color: #010101;
-    display: flex;    
+    display: flex;
     background-image: url(/mudsic/primerosPasos/imagenes/registro-img2.jpg);
     background-size: cover;
     background-repeat: no-repeat;
-
 }
 body .logo{
     position: fixed;
