@@ -3,6 +3,45 @@
     padding: 0;
     box-sizing: border-box;
 }
+input[type="text"]{        
+    box-shadow: 1px 1px 5px  rgba(0, 0, 0, 0.452);
+    width: 300px;
+    height: 40px;
+    border-radius: 10px;
+    border-style: none;
+    padding: 10px;
+}
+input[type="date"]{        
+    box-shadow: 1px 1px 5px  rgba(0, 0, 0, 0.452);
+    width: 200px;
+    height: 40px;
+    border-radius: 10px;
+    border-style: none;
+    padding: 10px;
+}
+input[type="submit"]{    
+    border-radius: 25px;
+    border-style: none;
+    font-size: 0.8rem;    
+    text-transform: uppercase;
+    font-weight: 600;
+    text-align: center;
+    padding-top: 2px;        
+    width: 150px;
+    height: 35px;
+}
+input[type="submit"]:hover{    
+    background-color: #d8b1a9;
+    box-shadow: 1px 1px 7px black;
+}
+body{
+    background-color: #010101;
+    display: flex;    
+    background-image: url(/mudsic/primerosPasos/imagenes/registro-img2.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+
+}
 body .logo{
     position: fixed;
     top: 10px;
@@ -10,4 +49,116 @@ body .logo{
     color: white;
     font-size: 2rem;
     font-weight: 900;
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.439);    
+}
+body .logo:hover{
+    color: #d8b1a9;
+    text-shadow: 1px 1px 7px black;
+}
+form .title{
+    height: 30px;
+    width: 90%;    
+}
+h1{
+    color: white;   
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.452);
+    left: 0;
+    margin-top: -10px;
+}
+form .title h1:hover{    
+    color: #d8b1a9;
+    text-shadow: 1px 1px 3px black
+}
+body form{
+    background: rgb(0,0,0);
+    background: radial-gradient(circle, rgba(0, 0, 0, 0.467) 30%, rgba(0, 0, 0, 0.124) 45%);
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.452);
+    height: 80vh;
+    width: 70vw;
+    margin: 10vh auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;      
+}
+a{
+    color: #d8b1a9;
+    text-decoration: none;    
+}
+body form .top, .center{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: row;
+    width: 700px;
+}
+body form .top .left{    
+    width: 280px;
+    height: 140px;
+    display: flex;
+    flex-direction: column;    
+    justify-content: space-around;
+    align-items: center;
+}
+body form .top .left .boton{
+    position: relative;    
+    height: 80%;
+
+}
+label#mar{
+    margin-left: 5px;
+}
+body form .top .left label{
+    text-align: center;
+    font-size: 1rem;
+    width: 250px;
+}
+body form .top .left img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+body form .top .left input{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    opacity: 50%;    
+}
+body form .top .right{
+    display: flex;
+    flex-direction: column;
+    height: 140px;
+    width: 290px;    
+    justify-content: space-around;
+}
+body form .center{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 850px;
+    height: 40px;    
+}
+body form .center .left, .right, .centerCenter{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+body form .center .left input, .right input{
+    margin-top: 3px;
+}
+body form .bottom{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.8rem;
+    margin: 5px 0 10px 0;
+}
+body form .bottom label{
+    font-size: 1rem;
 }
