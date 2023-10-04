@@ -1,0 +1,13 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body .logo{
+    position: fixed;
+    top: 10px;
+    left: 20px;
+    color: white;
+    font-size: 2rem;
+    font-weight: 900;
+}
