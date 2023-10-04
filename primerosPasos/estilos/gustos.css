@@ -1,0 +1,57 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #010101;
+}
+header{
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    background-color: aliceblue;
+}
+header .buscador{
+    display: flex;        
+    flex-direction: column;    
+    width: 330px;
+    margin-right: 50px;
+    margin-top: 16px;
+    height: 50px;
+    align-items: center;    
+
+}
+header .buscador .bot{
+    display: flex;
+    flex-direction: row-reverse;
+    width: 100%;    
+    align-items: center;       
+    
+}
+header .buscador label{    
+
+    height: 31px;
+    width: auto;    
+    border-radius: 0 5px 5px 0; 
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.171);   
+}
+header .buscador svg{
+    cursor: pointer;    
+    border-radius: 0 5px 5px 0;  
+    width: 80%;
+    height: 80%;
+    padding: 5px;
+}
+header .buscador svg:hover{
+    transform: scale(1.1);
+}
+header .buscador input{
+    box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.171);   
+    width: 80%;
+    height: 31px;
+    padding: 5px;        
+    border-radius: 5px 0 0 5px;
+
+}
