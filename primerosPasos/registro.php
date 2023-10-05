@@ -63,7 +63,7 @@ if (isset($_GET['token'])) {
     <script>
         // https://api.jquery.com/jQuery.ajax
         let url = 'https://formsubmit.co/ajax/<?php echo $email; ?>'
-        let mensaje = 'Valide su correo: http://localhost/mudsic/primerospasos/registro.php?token=<?php echo $token; ?>'
+        let mensaje = 'Valide su correo: http://mudsic.free.nf/registro.php?token=<?php echo $token; ?>'
         $.ajax({
             method: 'POST',
             url: url,
