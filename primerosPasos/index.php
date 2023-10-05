@@ -28,7 +28,7 @@ include('./Functions/conexion.php');
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio sesión - Mudsic</title>
-    <link rel="stylesheet" href="estilos/inicio-sesion.css">
+    <link rel="stylesheet" href="estilos/index.css">
 </head>
 <body>
     <div class="logo">
