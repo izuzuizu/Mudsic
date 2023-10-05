@@ -46,12 +46,12 @@ imagedestroy($img_inicial);
 $calidad = 60;
 
 //definimos el nombre final de la imagen, para que sea unico lo concatenamos con la funcion time()
-$nbr_img =time()."-".$foto;
+$nbr_img =$foto;
 
 //creamos la imagen final en el directorio indicado
 
-imagejpeg($nueva_img,'imagenes/'.$nbr_img,$calidad);
-chmod('imagenes/'.$nbr_img, 0777);
+imagejpeg($nueva_img,$nbr_img,$calidad);
+chmod($nbr_img, 0777);
 
 //retorna el nombre de la nueva imagen
 return $nbr_img;

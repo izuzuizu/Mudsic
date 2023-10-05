@@ -24,7 +24,6 @@ input.addEventListener('change', function() {// al cumplirse esto aparece la ima
 });
 
 sub.disabled = true
-sub.style.cursor = 'none'
 form.addEventListener('change', async function () {
     if (pass1.value == pass2.value && name.value!='' && mail.value!='' && date.value!='') {
         sub.disabled = false
