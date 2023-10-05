@@ -1,5 +1,5 @@
 <?php
-include('conexion.php');
+include('./Functions/conexion.php');
 if (isset($_GET['token'])) {
         if (session_start()) {
             $token = $_GET['token'];
@@ -9,10 +9,10 @@ if (isset($_GET['token'])) {
                 $sql = "UPDATE usuarios SET token='ok' WHERE token='$token'";
                 $actualizar = mysqli_query($conexion, $sql);
                 $row = mysqli_fetch_assoc($consulta);
-                $_SESSION['user'] = 'agus';
-                $_SESSION['pass'] = $row['Pass_u'];
-                $usuario = $_SESSION['user'];
-                header('location: gustos.html');
+                $_SESSION['user'] = $row['Nbr_u'];
+                $_SESSION['userId'] = $row['ID_u'];
+                $_SESSION['img'] = $row['Img_u'];
+                header('location: gustos.php');
             }else{
                 echo 'el token no existe, registrese';
                 session_destroy();
@@ -30,7 +30,7 @@ if (isset($_GET['token'])) {
 </head>
 <body>
 <?php
-    include('redimensionarImg.php');
+    include('./Functions/redimensionarImg.php');
     if (isset($_GET['send'])) {
         if ($_GET['send'] == 1) {
             echo 'Correo enviado, por favor valide';
@@ -47,18 +47,16 @@ if (isset($_GET['token'])) {
             $foto = $_FILES["imagen"]['tmp_name'];
             echo '
             <div class="aviso">Enviando correo de verificación, por favor espere</div>
-
-            
             ';
             if(is_uploaded_file($_FILES['imagen']["tmp_name"])){
                 $foto = 'imagenesUsers/'.$token.$_FILES["imagen"]["name"];
                 move_uploaded_file($_FILES["imagen"]["tmp_name"], $foto);
+                $Nimg = redimensionarImg($foto, 200, 200);
             }else{
                 $foto = 'imagenes/default.png';
             }
-            // $Nimg = redimensionarImg($foto, 200, 200);
             // unlink($foto); //borra la imagen original guardada en la raiz del proyecto 
-            $sql = "INSERT INTO usuarios (Nbr_u, Pass_u, Email_u, img, token) VALUES ('$user', '$contrasenia', '$email', '$foto', '$token')";
+            $sql = "INSERT INTO usuarios (Nbr_u, Pass_u, Email_u, Img_u, token) VALUES ('$user', '$contrasenia', '$email', '$foto', '$token')";
             $registrar= mysqli_query($conexion, $sql)? print("<script>console.log('usuario creado');</script>"): print('error al crear');
 ?>            
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -125,7 +123,7 @@ if (isset($_GET['token'])) {
             <a href="./inicio-sesion.html">inicie sesion</a>                
         </div>                   
     </form>
-<script src="registro.js"></script>
+<script src="./Functions/registro.js"></script>
 <?php
 }
 ?>

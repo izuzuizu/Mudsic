@@ -1,3 +1,15 @@
+<?php
+session_start();
+    if (isset($_SESSION['userId'])) {
+        $imgUser = $_SESSION['img'];
+    }else{
+        session_destroy();
+    }
+    if (isset($_GET['salir'])) {
+        session_destroy();
+        header('Location: inicio-sesion.php');
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,8 +34,9 @@
             <input type="search" name="busqueda" id="busqueda" placeholder="Ingrese su búsqueda"  id="buscador">  
         </div>
         <div class="sesion">
-            <a><label>Salir</label></a>
-            <img src="./imagenes/default.png" alt="">
+            <a href="gustos.php?salir=true"><label>Salir</label></a>
+            <!-- <p>nombre: <?php echo $_SESSION['user'].' id: '.$_SESSION['img']; ?></p> -->
+            <img src="<?php echo $_SESSION['img']; ?>" alt="">
         </div>
     </header>
 </body>

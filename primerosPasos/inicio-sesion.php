@@ -1,5 +1,5 @@
 <?php
-    include('conexion.php');
+include('./Functions/conexion.php');
     if (isset($_POST['subir'])) {
         session_start();
         $usuario = $_POST['usuario'];
@@ -7,15 +7,17 @@
         $sql = "SELECT * FROM usuarios WHERE Nbr_u='$usuario' AND token='ok'";
         $consulta = mysqli_query($conexion, $sql);
         if (mysqli_num_rows($consulta) > 0) {
-            $registro = mysqli_fetch_assoc($consulta);
-            if (password_verify($contrasenia, $registro['Pass_u'])) {
-                $_SESSION['user'] = $usuario;
-                header('Location: gustos.html');
+            $row = mysqli_fetch_assoc($consulta);
+            if (password_verify($contrasenia, $row['Pass_u'])) {
+                $_SESSION['user'] = $row['Nbr_u'];
+                $_SESSION['userId'] = $row['ID_u'];
+                $_SESSION['img'] = $row['Img_u'];
+                header('Location: gustos.php');
             }else{
                 echo 'contraseña incorrecta';
             }
         }else{
-            session_destroy();
+            // session_destroy();
             echo 'el usuario no existe, registrese';
         }
     }
