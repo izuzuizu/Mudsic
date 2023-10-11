@@ -16,7 +16,7 @@ session_start();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleccionar gustos - Mudsic</title>
-    <link rel="stylesheet" href="gustosPrueba.css">
+    <link rel="stylesheet" href="./estilos/gustos.css">
 </head>
 <body>        
     <button class="next" id="next">
