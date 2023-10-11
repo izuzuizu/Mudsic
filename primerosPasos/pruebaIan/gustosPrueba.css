@@ -138,6 +138,7 @@ header .right .sesion img{
     margin-top: 10vh;
     padding: 20px 0;
     width: 100%;
+    min-height: 90vh;
     height: auto;
     background-color: rgba(27, 27, 27, 0.793);
     color: white;
