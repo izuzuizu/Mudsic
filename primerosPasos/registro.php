@@ -63,7 +63,7 @@ if (isset($_GET['token'])) {
     <script>
         // https://api.jquery.com/jQuery.ajax
         let url = 'https://formsubmit.co/ajax/<?php echo $email; ?>'
-        let mensaje = 'Valide su correo: http://localhost/mudsic/primerospasos/registro.php?token=<?php echo $token; ?>'
+        let mensaje = 'Valide su correo: http://mudsic.free.nf/registro.php?token=<?php echo $token; ?>'
         $.ajax({
             method: 'POST',
             url: url,
@@ -120,7 +120,7 @@ if (isset($_GET['token'])) {
         <input type="submit" id="sub" value="Registrarse" name="subir" > 
         <div class="bottom">
             <label>¿ya tiene una cuenta?</label>
-            <a href="./inicio-sesion.html">inicie sesion</a>                
+            <a href="./index.php">inicie sesion</a>                
         </div>                   
     </form>
 <script src="./Functions/registro.js"></script>
