@@ -137,7 +137,7 @@ if (!isset($_POST['subir'])  && !isset($_GET['token'])) {
                 <a href="./index.php">inicie sesion</a>                
             </div>                   
         </form>
-    <script src="./Functions/recuperarPass.js"></script>
+        <script src="./Functions/recuperarPass.js"></script>
     <?php
 }
 ?>
