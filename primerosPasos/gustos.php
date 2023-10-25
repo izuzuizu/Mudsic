@@ -1,4 +1,5 @@
 <?php
+include("./Functions/conexion.php");
 session_start();
     if (isset($_SESSION['userId'])) {
         $imgUser = $_SESSION['img'];
@@ -9,6 +10,11 @@ session_start();
         session_destroy();
         header('Location: index.php');
     }
+    if (isset($_POST['genre1']) && isset($_POST['genre2']) && isset($_POST['genre3']) && isset($_POST['genre4']) &&isset($_POST['song1']) && isset($_POST['song2']) && isset($_POST['song3']) && isset($_POST['song4']) && isset($_POST['artist1']) && isset($_POST['artist2']) && isset($_POST['artist3']) && isset($_POST['artist4']) && isset($_POST['album1']) && isset($_POST['album2']) && isset($_POST['album3']) && isset($_POST['album4'])) {
+        // $sql = "INSERT INTO usuarios (Nbr_u, Pass_u, Email_u, Img_u, token) VALUES ('$user', '$contrasenia', '$email', '$foto', '$token')";
+        // $registrar= mysqli_query($conexion, $sql)? print("<script>console.log('usuario creado');</script>"): print('error al crear');
+        //aca se tiene que hacer la subida a la base de datos
+    }
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -18,7 +24,9 @@ session_start();
     <title>Seleccionar gustos - Mudsic</title>
     <link rel="stylesheet" href="./estilos/gustos.css">
 </head>
-<body>        
+<body>
+    <form action="" method="post" id="formSelect" style="display:none" >
+    </form>
     <button class="next" id="next">
         <label for="next">Siguiente</label>
     </button>    
@@ -30,10 +38,10 @@ session_start();
             <div class="info">
                 <label>Por favor, selecciones 5 artistas/álbumes/géneros de sus gustos</label>
             </div>
-        </div>                
+        </div>
         <div class="divisor">
             <div class="logo">
-                <label>MUDSIC</label>        
+                <label>MUDSIC</label>
             </div>
         </div>
         <div class="right">
@@ -46,21 +54,9 @@ session_start();
                 <img src="<?php echo $_SESSION['img']; ?>" alt="">
             </div>
         </div>
-        
     </header>
-    <div class="cont">
-        <div class="row">
-            <h2>Titulo</h2>
-            <div class="elementos">
-                <div class="elemento">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8e/Clics-modernos-charly-garcia-front.jpg" alt="" srcset="">
-                    <div class="text">
-                        <label id="nombre">Clics Modernos</label>
-                        <label id="autor">Charly García</label>
-                    </div>                    
-                </div>                
-            </div>
-        </div>               
+    <div class="cont">      
     </div>
+    <script src="./Functions/gustos.js"></script>
 </body>
 </html>
