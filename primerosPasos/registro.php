@@ -1,5 +1,6 @@
 <?php
 include('./Functions/conexion.php');
+
 if (isset($_GET['token'])) {
         if (session_start()) {
             $token = $_GET['token'];
@@ -55,15 +56,48 @@ if (isset($_GET['token'])) {
             }else{
                 $foto = 'imagenes/default.png';
             }
-            // unlink($foto); //borra la imagen original guardada en la raiz del proyecto 
-            $sql = "INSERT INTO usuarios (Nbr_u, Pass_u, Email_u, Img_u, token) VALUES ('$user', '$contrasenia', '$email', '$foto', '$token')";
-            $registrar= mysqli_query($conexion, $sql)? print("<script>console.log('usuario creado');</script>"): print('error al crear');
+
+
+            $sql = "SELECT * from usuarios where ID_u=(SELECT MAX(ID_u) from usuarios)";
+            $leer = mysqli_query($conexion, $sql);
+            $usuarios = mysqli_fetch_assoc($leer);
+            $id = $usuarios['ID_u'];
+
+            $bandera = false;
+            for ($id; $id > 0; $id--) { 
+                $sql = "SELECT * from usuarios where ID_u=(SELECT MAX($id) from usuarios)";
+                $leer = mysqli_query($conexion, $sql);
+                $usuarios = mysqli_fetch_assoc($leer);
+
+                //echo $usuarios['Email_u'].'<br>';
+
+                //echo $usuarios['ID_u'].'<br>';
+                if(isset($usuarios['ID_u'])) {
+
+                
+                if($email == $usuarios['Email_u']) {
+                    $bandera=true;
+                    echo '<style type="text/css">
+                    h2 { color: red; }
+                   </style>
+                    <h2>mail repetido</h2 style> <br>';
+                }
+                }
+            }
+
+            if($bandera == false) {//condicional para guardar los datos si el mail esta repetido
+                // unlink($foto); //borra la imagen original guardada en la raiz del proyecto 
+                $sql = "INSERT INTO usuarios (Nbr_u, Pass_u, Email_u, Img_u, token) VALUES ('$user', '$contrasenia', '$email', '$foto', '$token')";
+                $registrar= mysqli_query($conexion, $sql)? print("<script>console.log('usuario creado');</script>"): print('error al crear');
+
+            
 ?>            
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
         // https://api.jquery.com/jQuery.ajax
         let url = 'https://formsubmit.co/ajax/<?php echo $email; ?>'
-        let mensaje = 'Valide su correo: http://mudsic.free.nf/registro.php?token=<?php echo $token; ?>'
+        //let mensaje = 'Valide su correo: http://mudsic.free.nf/registro.php?token=<?php echo $token; ?>'
+        let mensaje = 'Valide su correo: http://localhost//proyecto_final/Mudsic/primerospasos/registro.php?token=<?php echo $token; ?>'
         $.ajax({
             method: 'POST',
             url: url,
@@ -78,6 +112,13 @@ if (isset($_GET['token'])) {
         });
     </script>
     <?php
+    } else { //condicional para no guardar los datos si el mail esta repetido
+        echo ' <br>
+                <style type="text/css">
+                    h2 { color: red; }
+                   </style>
+                    <h2>email ya existente</h2 style>';
+    }
         }
         if (!isset($_POST['subir'])) {
     ?>
