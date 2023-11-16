@@ -41,7 +41,7 @@ async function addElement(name, desc, img, type) {
         <img src="${img}" alt="" srcset="">
           <div class="text">
               <label for id="nombre">${name}</label>
-              <label id="autor">${desc}</label>
+              <label id="desc">${desc}</label>
           </div>
         </div>
     `
@@ -111,7 +111,7 @@ for (let index = 0; index < 7; index++) {
   artsSaved.push(recommendations[index].artists[0].id)
   let name = recommendations[index].artists[0].name
   let artist = await obtenerArtista(recommendations[index].artists[0].id);
-  let desc = artist.genres
+  let desc = artist.genres.join(', ');
   let img = ''
   if (artist.images[0]) {
     img = artist.images[0].url
@@ -182,7 +182,6 @@ async function loadAlbums() {
   });
 }
 async function loadGenres() {
-
   let contador = 0
 
     for (let index = 0; index < genres.length; index++) {
@@ -298,12 +297,12 @@ next.addEventListener('click', async function () {
   }
   }, 1);
 })
-window.addEventListener('focus', function() {
-  console.log('¡El usuario ha vuelto a la pestaña!');
-});
-window.addEventListener('blur', function() {
-  console.log('El usuario ha dejado la pestaña.');
-});
-window.addEventListener('keyup', function(event) {
-  console.log(event.key);
-});
+// window.addEventListener('focus', function() {
+//   console.log('¡El usuario ha vuelto a la pestaña!');
+// });
+// window.addEventListener('blur', function() {
+//   console.log('El usuario ha dejado la pestaña.');
+// });
+// window.addEventListener('keyup', function(event) {
+//   console.log(event.key);
+// });

@@ -26,7 +26,7 @@ session_start();
     <link rel="stylesheet" href="./estilos/gustos.css">
 </head>
 <body>
-    <form action="" method="post" id="formSelect" style="display:none" >
+    <form action="home.php" method="post" id="formSelect" style="display:none" >
     </form>
     <button class="next" id="next">
         <label for="next">Siguiente</label>
