@@ -17,7 +17,7 @@
 <?php 
 include('conexion.php');
     $i = 0;
-    $usuario = 1;
+    // $usuario = 1;
     $tiempo = $_GET['time'];
     $name = $_GET['name'];
     $type = $_GET['type'];

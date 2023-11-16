@@ -189,7 +189,7 @@ window.addEventListener('load', function() {
   buscar();
 });
 document.addEventListener('keydown', function(event) {
-  if (event.code === 'Space') {
+  if (event.code === ' ') {
     event.preventDefault();
     window.scrollBy(0, 0);
   }
@@ -1191,7 +1191,7 @@ async function buscar() {
         await comun()
     }
     if (event.key == ' '){
-      busqueda.value += ' '
+      // busqueda.value += ' '
       // event.preventDefault();
       // setTimeout(() => {
       //   reproducir()
