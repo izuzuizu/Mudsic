@@ -149,6 +149,9 @@ let genres = [
   "world-music"
 ]
 let orderPlaylist = []
+let playlistName
+let playlistDesc
+let actualPlaylistId
 
 
 async function getToken() {
@@ -247,15 +250,15 @@ async function addRow(cancion, artista, duracion, imagen, album) {
           // audioPlayer.volume=1;
           await agregarALaFila(resultado.link, imagen, cancion, artista, duracion, album);
           // duration = musica.duration
-          if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
-            duration = resultado.duration
-          }else{
-            setInterval(() => {
-            duration = musica.duration
-            }, 200);
-          }
-          duration = duracion
-          await interaccion('Cancion:'+cancion)
+          // if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
+          //   duration = resultado.duration
+          // }else{
+          //   setInterval(() => {
+          //   duration = musica.duration
+          //   }, 200);
+          // }
+          // duration = duracion
+          // await interaccion('Cancion',cancion)
           clearInterval(intervalo4);
           actualizar()
           let Breaccion = document.getElementById('reaccion')
@@ -359,7 +362,6 @@ async function cancionNew(Cancion, artista, cancionDur, imagen, album) {
     let cont = 0
     let resultado
     let repite
-    
     // Clave de API de YouTube
     const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
     // Construye la consulta de búsqueda
@@ -469,6 +471,9 @@ async function shazamLink(artistName, albumName, songName) {
 // }
 async function moveList() {
   var list = document.getElementById('sortable-list');
+  playlistName = document.getElementById('playlistName')
+  playlistDesc = document.getElementById('playlistDesc')
+  actualPlaylistId = document.getElementById('playlistId')
   // Función para manejar el evento 'dragover'
   function dragOverHandler(e) {
       e.preventDefault();
@@ -492,31 +497,35 @@ async function moveList() {
         parentElement.insertBefore(draggedElement, dropTarget);
     }
   }
-// Obtiene los elementos de la lista
-var items = list.querySelectorAll('.cancion');
+  // Obtiene los elementos de la lista
+  var items = list.querySelectorAll('.cancion');
   for (var i = 0; i < items.length; i++) {
-      var item = items[i];
-      // item.setAttribute('id', 'cancion' + (i+1));
-      // item.setAttribute('draggable', 'true');
-      item.addEventListener('dragstart', dragStartHandler);
-      item.addEventListener('dragover', dragOverHandler);
-      item.addEventListener('drop', dropHandler);
-      item.addEventListener('mouseover', ()=>{
-          // Crea un array para almacenar el orden de los elementos
-          var order = [];
-          // Obtiene la lista
-          var list = document.getElementById('sortable-list');
-          // Obtiene los elementos de la lista
-          var items = list.querySelectorAll('.cancion');
-          // Recorre los elementos de la lista y añade su contenido al array
-          for (var i = 0; i < items.length; i++) {
-              order.push(items[i].id);
-          }
-          // Ahora, 'order' es un array que contiene el orden de los elementos
-          console.log(order);
-          orderPlaylist = order
-      })
-
+    var item = items[i];
+    // item.setAttribute('id', 'cancion' + (i+1));
+    // item.setAttribute('draggable', 'true');
+    item.addEventListener('dragstart', dragStartHandler);
+    item.addEventListener('dragover', dragOverHandler);
+    item.addEventListener('drop', dropHandler);
+    item.addEventListener('dragend', async ()=>{
+      // console.log(item)
+      var order = [];
+      // Obtiene la lista
+      var list = document.getElementById('sortable-list');
+      // Obtiene los elementos de la lista
+      var items = list.querySelectorAll('.cancion');
+      // Recorre los elementos de la lista y añade su contenido al array
+      for (var i = 0; i < items.length; i++) {
+        order.push(parseInt(items[i].getAttribute('idBD')));
+      }
+      // Ahora, 'order' es un array que contiene el orden de los elementos
+      // order.forEach(cancion => {
+      //   let song = document.getElementById(cancion)
+      //   cancion = song.getAttribute('idBD')
+      // });
+      orderPlaylist = order
+      console.log(playlistName.innerHTML);
+      await updatePlaylist(playlistName.innerHTML, playlistDesc.innerHTML, orderPlaylist, actualPlaylistId.innerHTML)
+    })
   }
 }
 async function cargarContenido(url) {
@@ -648,7 +657,9 @@ async function radio(artist, track, album) {
         })
           .catch(error => console.error(error));
 }
-async function contextMenuCancion(cancionName, artista, cancionDur, imagen, album, artistaIdSong) {
+async function contextMenuSecondOption(){
+}
+async function openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong) {
   let contextMenu = document.getElementById('contextMenu')
   contextMenuPressed = true
   let options = document.querySelectorAll('.option')
@@ -686,7 +697,13 @@ async function contextMenuCancion(cancionName, artista, cancionDur, imagen, albu
         case "like":
           await reaccionar()
           break;
-        case "addLibrary":
+        case "emotion":
+          break;
+        case 'addLibrary':
+          break;
+        case 'addToPlaylist':
+          let options = []
+          contextMenuSecondOption()
           break;
         default:
           break;
@@ -745,7 +762,7 @@ async function cancionesPreview() {
     })
     cancion.addEventListener('contextmenu', async function(event) {
       event.preventDefault();
-      await contextMenuCancion(cancionName, artista, cancionDur, imagen, album, artistaIdSong)
+      await openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong)
     });
     if (cancion.getAttribute('value') =='nulo') {
       cancion.addEventListener('mouseenter',function name() {
@@ -938,22 +955,29 @@ async function artistasPreview() {
     })
   }
 }
-async function updatePlaylist(name, desc, songs) {
-  for (let index = 0; index < order.length; index++) {
-  }
-  let data = {name: name, desc: desc, songs: songs};
-  await fetch('../primerosPasos/Sections/Screens/Playlists.php?create=true', {
+async function updatePlaylist(name, desc, songs, playlistId) {
+  // playlistName
+  let form = document.getElementById('formPlaylist')
+  let data = new FormData(form);
+  // let arrayJson = JSON.stringify(songs);
+  // Agregar el array a 'data'
+  data.append('update', 'true');
+  data.append('name', name);
+  data.append('desc', desc);
+  data.append('playlistId', playlistId);
+  data.append('songs', JSON.stringify(songs));
+  data.append('img', 'img2'); //cambiar img2 por variable con ruta a imagen de la playlist
+  // let data = {name: name, desc: desc, songs: songs};
+  let result= await fetch('../primerosPasos/Functions/updatePlaylist.php?update=true', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(data),
+    body: data,
   })
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+  // console.log(await result.text())
+  await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${playlistId}`)
+  await moveList()
+  await cancionesPreview()
 }
 async function createPlaylist() {
   // let data = {name: name, desc: desc};
@@ -966,14 +990,29 @@ async function createPlaylist() {
   })
   // .then(async response => {console.log(await response.json())})
 }
+async function deletePlaylist(playlistId) {
+  // console.log(playlistId)
+  await fetch(`../primerosPasos/Functions/deletePlaylist.php?playlistId=${playlistId}`)
+  await cargarContenido(`../primerosPasos/Sections/Screens/Playlists.php`)
+  await playlistsPreview()
+}
 async function playlistsPreview() {
   let playlistsL = document.getElementById('playlists.length')
-  console.log(playlistsL)  
+  // console.log(playlistsL)
   for (let index = 1; index <= playlistsL.innerHTML; index++) {
     let playlist = document.getElementById('playlist'+index)
+    let deleteButton = document.getElementById('borrar'+index)
+    deleteButton.addEventListener('click', async () => {
+      // console.log(playlist.getAttribute('value'))  
+      // actualPlaylistId = playlist.getAttribute('value')
+      await deletePlaylist(playlist.getAttribute('value'))
+      await moveList()
+      // await cancionesPreview()
+    })
     playlist.addEventListener('click', async () => {
       // console.log(playlist.getAttribute('value'))  
-      await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${playlist.getAttribute('value')}`)
+      actualPlaylistId = playlist.getAttribute('value')
+      await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${actualPlaylistId}`)
       await moveList()
       await cancionesPreview()
     })
@@ -987,7 +1026,7 @@ async function playlistsPreview() {
         }else{
           await createPlaylist(name.value, desc.value)
           // console.log(name)
-      await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${playlist.getAttribute('value')}`)
+          await cargarContenido(`../primerosPasos/Sections/Screens/Playlists.php`)
         }
       })
   
@@ -1097,13 +1136,31 @@ document.getElementById('Nplaylists').addEventListener('click', async function(e
     await cargarContenido('../primerosPasos/Sections/Screens/Playlists.php');
     await playlistsPreview()
 });
+document.getElementById('Nhistorial').addEventListener('click', async function(e) {
+    e.preventDefault();
+    await cargarContenido('../primerosPasos/Sections/Screens/history.php');
+    await playlistsPreview()
+    await cancionesPreview();
+    await artistasPreview();
+    let albumsCant = document.getElementById('albums.length') 
+    for (let index = 1; index <= albumsCant.innerHTML; index++) {
+      let album = document.getElementById('album'+index)
+      let albumNombre = document.getElementById('albumName'+index)
+      await albumsPreview(album, index)
+      album.addEventListener('click', async function name(e) {
+        e.preventDefault()
+        await goToAlbum(albumNombre.innerHTML, nombreArtista.innerHTML, album.getAttribute('value'));
+
+      });
+  }
+});
 async function interaccion(type, nombre) {
-  var hoy = new Date();
+  var hoy = new Date()
   let hora = hoy.getHours() + ':' + hoy.getMinutes() + ':' + hoy.getSeconds();
   hora = padTime(hora)
   console.log('subiendo: '+type+':'+nombre+' a las : '+hora)
   // Enviar los datos del formulario mediante AJAX
-  let response = await fetch(`interaccion.php?name=${nombre}&type=${type}&time=${hora}`, {
+  let response = await fetch(`Functions/interaccion.php?name=${nombre}&type=${type}&time=${hora}`, {
     method: 'GET'
   });
 }

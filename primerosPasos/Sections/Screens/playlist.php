@@ -8,14 +8,17 @@
     $i = 0;
     $playlistId = $_GET['playlistId'];
     $playlistName = '';
+    $playlistDesc = '';
     $sql="SELECT * from playlists Where id = '$playlistId'";
     $playlist = mysqli_query($conexion, $sql);
     while ($row = mysqli_fetch_assoc($playlist)) {
         $playlistName = $row["nombre"];
+        $playlistDesc = $row["descripcion"];
     }
 ?>
 <body>
-    <h1><?php echo $playlistName; ?></h1>
+    <h1 id="playlistName"><?php echo $playlistName; ?></h1>
+    <p id="playlistDesc" ><?php echo $playlistDesc; ?></p>
     <div id="sortable-list">
     <?php
         // echo $playlistId;
@@ -47,7 +50,7 @@
                     $artist = $row3['nombre'];
                 }
                 echo '
-                    <div class="cancion" id="cancion'.$i.'" value="'.$previewLink.'" style="width: 30%">
+                    <div class="cancion" id="cancion'.$i.'" value="'.$previewLink.'" idBD="'.$idSong.'" style="width: 30%">
                         <img id="imgS'.$i.'" src="'.$albumImg.'" style="width:50%; height:50%" alt="">
                         <p id="name'.$i.'">'.$nombre.'</p>
                         <p id="artist'.$i.'">'.$artist.'</p>
@@ -60,6 +63,9 @@
         }
     ?>
     <p id="canciones.length"><?php echo $i; ?></p>
+    <p id="playlistId" ><?php echo $playlistId; ?></p>
+    <form action="" method="post" id="formPlaylist" enctype="multipart/form-data">
+    </form>
 
     <style>
         #sortable-list {

@@ -38,8 +38,9 @@ window.addEventListener('keydown', function (event) {
           volumenBajo()
         break;
         case ` `:
+          console.log(document.activeElement)
           if (musica.paused) {
-            if (document.activeElement.id == 'busqueda') {
+            if (document.activeElement.id == 'busqueda' || document.activeElement.id == 'namePlaylist' || document.activeElement.id == 'descPlaylist') {
 
             }else{
               reproducir()

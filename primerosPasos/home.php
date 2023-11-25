@@ -29,14 +29,17 @@
   </audio>
 </head>
 <body>
-  <div id="contextMenu" style="display: none; position: absolute;">
-      <p class="option" id="next">Reproducir a continuacion</li>
-      <p class="option" id="row">agregar a la fila</p>
-      <p class="option" id="initRadio">Iniciar Radio</p>
-      <p class="option" id="addRadio">Agregar Radio</p>
-      <p class="option" id="like">Me Gusta</p>
-      <p class="option" id="addLibrary">Agregar a Biblioteca</p>
-      <!-- <li id="dele">eliminar de la fila</li> -->
+    <div id="contextMenu" style="display: none; position: absolute;">
+        <p class="option" id="next">Reproducir a continuacion</li>
+        <p class="option" id="row">agregar a la fila</p>
+        <p class="option" id="initRadio">Iniciar Radio</p>
+        <p class="option" id="addRadio">Agregar Radio</p>
+        <p class="option" id="like">Me Gusta</p>
+        <p class="option" id="emotion">Emocion ></p>
+        <p class="option" id="like">Me Gusta</p>
+        <p class="option" id="addLibrary">Agregar a Biblioteca</p>
+        <p class="option" id="addToPlaylist">Agregar a Playlist ></p>
+        <!-- <li id="dele">eliminar de la fila</li> -->
     </div>
     <?php
         include('./Sections/nav.html')

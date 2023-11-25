@@ -30,9 +30,9 @@ include('conexion.php');
     $a = mysqli_fetch_assoc($a);
     print($a['COUNT(*)']);
     if ($a['COUNT(*)'] == 0) {
-        $sql = 'INSERT INTO biblioteca (tipo, nombre, usuarios_id, repeticion) VALUES ("'.$type.'","'.$name.'","'.$usuario.'",1)';
+        $sql = "INSERT INTO biblioteca (tipo, nombre, usuarios_id, repeticion) VALUES ('$type','$name','$usuario',1)";
         $artistas = mysqli_query($conexion, $sql);
-        echo 'ayuda';
+        // echo 'ayuda';
     }
     while ($canta = mysqli_fetch_assoc($library)){
         if($canta["nombre"]== $name && $canta["tipo"] == $type && $canta["usuarios_id"] == $usuario) {
@@ -40,7 +40,7 @@ include('conexion.php');
             $sql = "UPDATE biblioteca SET repeticion = '$repe' WHERE tipo = '$type' AND nombre = '$name' AND usuarios_id = '$usuario'";
             $artistas = mysqli_query($conexion, $sql);
         }
-        $i += 1;
+        // $i += 1;
     }
 ?>
 </body>

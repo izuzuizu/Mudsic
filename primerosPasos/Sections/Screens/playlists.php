@@ -33,6 +33,7 @@
                     <p id="name'.$i.'">'.$row2['nombre'].'</p>
                     <p id="desc'.$i.'">'.$row2['descripcion'].'</p>
                 </div> 
+                <input type="button" id="borrar'.$i.'" value="Borrar" name="Delete">
             ';
         }
     ?>

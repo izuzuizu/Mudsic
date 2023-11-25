@@ -16,8 +16,8 @@
 </head>
 <body>
     
-    <h1>Cosas que te gustaron</h1>
-    <p>lista de canciones, albums, artistas y playlists con las que interactuas mas</p>
+    <h1>Historial   </h1>
+    <p>lista de canciones, albums, artistas y playlists con las que interactuaste</p>
     <div class="Biblioteca">
         <?php
             $i=0;
@@ -27,7 +27,7 @@
             $duracion=0;
             $userId = 1;
             // $sql = 'SELECT * from biblioteca WHERE usuarios_id ='.$userId.'';
-            $sql = "SELECT * FROM biblioteca WHERE usuarios_id ='$userId' ORDER BY biblioteca.repeticion DESC";
+            $sql = "SELECT * FROM historial WHERE usuarioId ='$userId' ORDER BY historial.id DESC";
             $biblioteca= mysqli_query($conexion, $sql);
             while ($todo = mysqli_fetch_assoc($biblioteca)) {
                 $i+=1;
@@ -36,17 +36,17 @@
                 $artistName='';
                 $artistId='';
                 $albumName= '';
-                $type = $todo['tipo'];
-                $name = $todo['nombre'];
-                switch ($type) {
+                $tipo = $todo['tipo'];
+                $nombre = $todo['nombre'];
+                $time = $todo['horario'];
+                switch ($tipo) {
                     case 'Cancion':
-                        $sql2 = "SELECT * from canciones WHERE nombre ='$name'";
+                        $sql2 = "SELECT * from canciones WHERE nombre ='$nombre'";
                         $canciones= mysqli_query($conexion, $sql2);
                         while ($cancion = mysqli_fetch_assoc($canciones)) {
                             $link = $cancion['previewUrl'];
                             $artistaId = $cancion['artista'];
                             $albumId = $cancion['album'];
-                            $duracion = $cancion['duracion'];
                             $sql2 = "SELECT * from artistas WHERE artista_idSpotify ='$artistaId'";
                             $artist= mysqli_query($conexion, $sql2);
                             if ($link == 'nulo') {
@@ -64,18 +64,20 @@
                             }
                             $cancionesL +=1;
                             echo '
-                            <div id="'.strtolower($type).$cancionesL.'" value="'.$link.'" style="width: 30%">
-                                <img id="imgS'.$cancionesL.'" src="'.$img.'" style="width:50%; height:50%" alt="">
-                                <p id="name'.$cancionesL.'">'.$name.'</p>
-                                <p id="artist'.$cancionesL.'">'.$artistName.'</p>
-                                <p id="dur'.$cancionesL.'">'.$duracion.'</p>
-                                <p id="albumSong'.$cancionesL.'">'.$albumName.'</p>
-                                <p id="artistaId">'.$artistId.'</p>
-                                </div> ';
-                                    }
+                                <div id="'.strtolower($tipo).$cancionesL.'" value="'.$link.'" style="width: 30%">
+                                    <img id="imgS'.$cancionesL.'" src="'.$img.'" style="width:50%; height:50%" alt="">
+                                    <p id="name'.$cancionesL.'">'.$nombre.'</p>
+                                    <p id="artist'.$cancionesL.'">'.$artistName.'</p>
+                                    <p id="dur'.$cancionesL.'">'.$duracion.'</p>
+                                    <p id="albumSong'.$cancionesL.'">'.$albumName.'</p>
+                                    <p id="artistaId">'.$artistId.'</p>
+                                    <p id="timeSong'.$cancionesL.'" >'.$time.'</p>
+                                </div>
+                            ';
+                        }
                         break;
                     case 'Album':
-                        $sql2 = "SELECT * from albumes WHERE nombre ='$name'";
+                        $sql2 = "SELECT * from albumes WHERE nombre ='$nombre'";
                         $albumes= mysqli_query($conexion, $sql2);
                         while ($album = mysqli_fetch_assoc($albumes)) {
                             $artistId = $album['album_idSpotify'];
@@ -83,30 +85,30 @@
                             $artistAlbum = mysqli_query($conexion, $sql3);
                             $artista = mysqli_fetch_assoc($artistAlbum);
                             while ($art = mysqli_fetch_assoc($artistAlbum)) {
-                            $artistName = $art['nombre'];
+                                $artistName = $art['nombre'];
                             }
                             $albumImg = $album['imgAlbum'];
                             $albumLength = $album['canciones'];
                             $albumId = $album['album_idSpotify'];
                             $albumType = $album['type'];
                             // var_dump($album);
-
                             $albumsL += 1;
                         echo'
-                            <div id="'.strtolower($type).$albumsL.'" value="'.$albumId.'" style width="15%">
-                                <h3 id="albumName'.$albumsL.'" >'.$name.'</h3>
+                            <div id="'.strtolower($tipo).$albumsL.'" value="'.$albumId.'" style width="15%">
+                                <h3 id="albumName'.$albumsL.'" >'.$nombre.'</h3>
                                 <img id="imgS'.$albumsL.'" width="10%" height="10%" src="'.$albumImg.'" alt="">
                                 <h4>'.$albumType.'</h4>
                                 <p>canciones: </p>
                                 <p id ="cantCancionesAlbum'.$albumsL.'" value="'.$albumLength.'" >'.$albumLength.'</p>      
                                 <p id="albumId'.$albumsL.'" value="'.$albumId.' ?>" style="display: none;">'.$albumId.'</p>
                                 <p id="artistaAlbum'.$albumsL.'" style="display: none;">'.$artistName.'</p>
+                                <p id="timeAlbum'.$albumsL.'" >'.$time.'</p>
                             </div>
                         ';
                         }
                         break;
                     case 'Artista':
-                        $sql2 = "SELECT * from artistas WHERE nombre ='$name'";
+                        $sql2 = "SELECT * from artistas WHERE nombre ='$nombre'";
                         $artistas= mysqli_query($conexion, $sql2);
                         while ($artista = mysqli_fetch_assoc($artistas)) {
                             if (isset($artista['imgArtista'])) {
@@ -127,18 +129,55 @@
                             }
                             $artistasL +=1;
                             echo '
-                            <div id="'.strtolower($type).$artistasL.'" value="'.$artistId.'">
-                                <p id="artista'.$artistasL.'name">'.$name.'</p>
-                                <img src="'.$img.'" style="width: 250px ; heigth: 250px;" alt="">';
+                            <div id="'.strtolower($tipo).$artistasL.'" value="'.$artistId.'">
+                                <p id="artista'.$artistasL.'name">'.$nombre.'</p>
+                                ';
+                                    echo '<img src="'.$img.'" style="width: 250px ; heigth: 250px;" alt="">';
                                 echo '<p>Popularidad: '.$popularidad.'</p>
                                 <p>generos: '.($generos).'</p>
-                            </div>';
+                                <p id="timeArtist'.$artistasL.'" >'.$time.'</p>
+                                </div>';
                         }
+                        break;
+                    case 'Playlist':
+                        // $sql2 = "SELECT * from artistas WHERE nombre ='$nombre'";
+                        // $artistas= mysqli_query($conexion, $sql2);
+                        // while ($artista = mysqli_fetch_assoc($artistas)) {
+                        //     if (isset($artista['imgArtista'])) {
+                        //         $img = $artista['imgArtista'];
+                        //     }
+                        //     $popularidad = $artista['popularidad'];
+                        //     $seguidores = $artista['seguidores'];
+                        //     $artistId = $artista["artista_idSpotify"];
+                        //     $art = $artista["id"];
+                        //     $generos = '';
+                        //     $sql2 = "SELECT * from artistas_generos WHERE artista_id ='$artistId'";
+                        //     $generosArt= mysqli_query($conexion, $sql2);
+                        //     while ($generoo = mysqli_fetch_assoc($generosArt)) {
+                        //         $idGenero = $generoo['id'];
+                        //         $sql2 = "SELECT nombre from generos WHERE id ='$idGenero'";
+                        //         $genero= mysqli_query($conexion, $sql2);
+                        //         $generos = $generos.mysqli_fetch_assoc($genero)['nombre'];
+                        //     }
+                        //     $artistasL +=1;
+                        //     echo '
+                        //     <div id="'.strtolower($tipo).$artistasL.'" value="'.$artistId.'">
+                        //         <p id="artista'.$artistasL.'name">'.$nombre.'</p>
+                        //         ';
+                        //             echo '<img src="'.$img.'" style="width: 250px ; heigth: 250px;" alt="">';
+                        //         echo '<p>Popularidad: '.$popularidad.'</p>
+                        //         <p>generos: '.($generos).'</p>
+                        //         <p id="timeArtist'.$artistasL.'" >'.$time.'</p>
+                        //         </div>';
+                        // }
+                        echo ':Playlist:';
                         break;
                     default:
                         break;
                     
                 }
+                echo '
+                    ';
                 // $sql = 'SELECT * from biblioteca WHERE usuarios_id ='.$userId.'';
                 // $artistas= mysqli_query($conexion, $sql);
                 ?>
