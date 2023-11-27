@@ -446,7 +446,6 @@ async function cancionNew(Cancion, artista, cancionDur, imagen, album) {
     }
 }
 async function shazamLink(artistName, albumName, songName) {
-  
 }
 // // Cargar contenido mediante AJAX
 // async function cargarContenido(url) {
