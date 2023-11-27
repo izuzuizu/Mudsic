@@ -120,7 +120,6 @@ for (let index = 0; index < 7; index++) {
 }
 for (let index = 0; index < 7; index++) {
   let element = document.getElementById('element'+recommendations[index].artists[0].name)
-        element.style.border = '1px solid black';
         element.style.cursor = 'pointer';
   element.addEventListener('click', function () {
     if (this.style.backgroundColor === 'red') {
@@ -163,7 +162,6 @@ async function loadAlbums() {
     }
     for (let index = 0; index < 7; index++) {
       let element = document.getElementById('element'+recommendations[index].album.name)
-            element.style.border = '1px solid black';
             element.style.cursor = 'pointer';
       element.addEventListener('click', function () {
         if (this.style.backgroundColor === 'red') {
@@ -193,7 +191,6 @@ async function loadGenres() {
     }
     for (let index = 0; index < genres.length; index++) {
       let element = document.getElementById('element'+genres[index])
-            element.style.border = '1px solid black';
             element.style.cursor = 'pointer';
       element.addEventListener('click', function () {
         if (this.style.backgroundColor === 'red') {
@@ -235,7 +232,6 @@ async function loadSongs() {
     }
     for (let index = 0; index < 10; index++) {
       let element = document.getElementById('element'+recommendations[index].name)
-            element.style.border = '1px solid black';
             element.style.cursor = 'pointer';
       element.addEventListener('click', function () {
         if (this.style.backgroundColor === 'red') {
