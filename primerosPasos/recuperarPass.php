@@ -24,7 +24,13 @@ session_start();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recuperar Contraseña - Mudsic</title>
+    <?php
+    if(isset($_GET["Modificar"])) {
+        echo "<title>Modificar Contraseña - Mudsic</title>";
+    } else {
+        echo "<title>Recuperar Contraseña - Mudsic</title>";
+    }
+    ?>
     <link rel="stylesheet" href="estilos/registro.css">
 </head>
 <body>
@@ -64,7 +70,8 @@ session_start();
                     <script>
                         // https://api.jquery.com/jQuery.ajax
                         let url = 'https://formsubmit.co/ajax/<?php echo $email; ?>'
-                        let mensaje = 'Valide su correo para recuperar su contraseña: http://localhost/mudsic/primerospasos/recuperarPass.php?token=<?php echo $token; ?>'
+                        // let mensaje = 'Valide su correo para recuperar su contraseña: http://localhost/mudsic/primerospasos/recuperarPass.php?token=<?php echo $token; ?>'
+                        let mensaje = 'Valide su correo para recuperar su contraseña: http://localhost/proyecto_final/mudsic_0.1/mudsic/primerospasos/recuperarPass.php?token=<?php echo $token; ?>'
                         $.ajax({
                             method: 'POST',
                             url: url,
@@ -122,7 +129,13 @@ if (!isset($_POST['subir'])  && !isset($_GET['token'])) {
         </div>
         <form action="" method="post" id="form" enctype="multipart/form-data" >
             <div class="title">
-                <h1>Recuperar contraseña</h1>
+                <?php
+                if(isset($_GET["modificar"])) {
+                    echo "<h1>Modificar contraseña</h1>";
+                } else {
+                    echo "<h1>Recuperar contraseña</h1>";
+                }
+                ?>
             </div>
             <div class="center">
                 <div class="centerCenter">
