@@ -56,6 +56,7 @@ window.addEventListener('keydown', function (event) {
 });
 async function reaccionar() {
   let boton = document.getElementById('reaccionB')
+  console.log(emocion)
   emocion.value = 1
   song.value= canciones[cancionActual].nombre
   console.log('subiendo reaccion: '+emocion.value+' de '+song.value)
