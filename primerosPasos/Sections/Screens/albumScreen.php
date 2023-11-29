@@ -51,6 +51,7 @@
     <h1 id="album" ><?php echo $album ?></h1>
     <h4>de </h4>
     <h4 id="artist" ><?php echo $artist ?></h4>
+    
     <?php
         while ($row = mysqli_fetch_assoc($canciones)) {
         $idSong = $row['id'];
@@ -84,6 +85,7 @@
                 <p id="dur'.$i.'">'.$duracion.'</p>
                 <p id="albumSong'.$i.'">'.$album.'</p>
                 <p id="artistaId">'.$artist.'</p>
+                <p id="songBD'.$i.'">'.$idSong.'</p>
             </div> 
             ';
             $i+=1;

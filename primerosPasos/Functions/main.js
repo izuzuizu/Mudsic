@@ -14,7 +14,7 @@ let intervalo2
 let intervalo3
 let intervalo4
 let preview = document.getElementById('preview')
-let busqueda = document.getElementById('busqueda')
+let busqueda = document.getElementById('busquedaText')
 busqueda.autocomplete = "on"
 let history = [];
 let eventAdded = false;
@@ -202,7 +202,7 @@ function padTime(time) {
   let paddedParts = parts.map(part => part.padStart(2, '0'));
   return paddedParts.join(':');
 }
-async function addRow(cancion, artista, duracion, imagen, album) {
+async function addRow(cancion, artista, duracion, imagen, album, idBD) {
   //animacion de carga aca
   let cont = 0
   let resultado
@@ -248,7 +248,7 @@ async function addRow(cancion, artista, duracion, imagen, album) {
           // audioPlayer.src = resultado.link
           // audioPlayer.load()
           // audioPlayer.volume=1;
-          await agregarALaFila(resultado.link, imagen, cancion, artista, duracion, album);
+          await agregarALaFila(resultado.link, imagen, cancion, artista, duracion, album, idBD);
           // duration = musica.duration
           // if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
           //   duration = resultado.duration
@@ -287,7 +287,7 @@ async function addRow(cancion, artista, duracion, imagen, album) {
       console.log('la cancion no se pudo cargar')
   }
 }
-async function cancionNext(cancion, artista, duracion, imagen, album) {//animacion de carga aca
+async function cancionNext(cancion, artista, duracion, imagen, album, idBD) {//animacion de carga aca
   let cont = 0
   let resultado
   let repite
@@ -330,7 +330,7 @@ async function cancionNext(cancion, artista, duracion, imagen, album) {//animaci
           resultado.status = false
         }
         if (resultado.status == 'ok') {
-          await siguienteCancion(resultado.link, imagen, cancion, artista, duracion, album);
+          await siguienteCancion(resultado.link, imagen, cancion, artista, duracion, album, idBD);
           // duration = duracion
           await interaccion('Cancion', cancion)
           clearInterval(intervalo4);
@@ -357,7 +357,7 @@ async function cancionNext(cancion, artista, duracion, imagen, album) {//animaci
       console.log('la cancion no se pudo cargar')
   }
 }
-async function cancionNew(Cancion, artista, cancionDur, imagen, album) {
+async function cancionNew(Cancion, artista, cancionDur, imagen, album, idBD) {
     //animacion de carga aca
     let cont = 0
     let resultado
@@ -405,7 +405,7 @@ async function cancionNew(Cancion, artista, cancionDur, imagen, album) {
             audioPlayer.src = resultado.link
             audioPlayer.load()
             audioPlayer.volume=1;
-            await nuevaCancion(resultado.link, imagen, Cancion, artista, cancionDur, album);
+            await nuevaCancion(resultado.link, imagen, Cancion, artista, cancionDur, album, idBD);
             duration = musica.duration
             if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
               duration = resultado.duration
@@ -421,8 +421,8 @@ async function cancionNew(Cancion, artista, cancionDur, imagen, album) {
             // await radioSpotify(artista, Cancion, )
             let Breaccion = document.getElementById('reaccionB')
             Breaccion.addEventListener('click',async function name() {
-              let emociones = document.getElementById('emociones')
-              emociones.style.display = 'block'
+              // let emociones = document.getElementById('emociones')
+              // emociones.style.display = 'block'
             })
             }else{
               console.log('esperando cancion')
@@ -658,7 +658,7 @@ async function radio(artist, track, album) {
 }
 async function contextMenuSecondOption(){
 }
-async function openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong) {
+async function openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong, idBD) {
   let contextMenu = document.getElementById('contextMenu')
   contextMenuPressed = true
   let options = document.querySelectorAll('.option')
@@ -677,13 +677,13 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
     option.addEventListener('click',async function name(params) {
       switch (option.id) {
         case "next":
-          await cancionNext(cancionName, artista, cancionDur, imagen, album);
+          await cancionNext(cancionName, artista, cancionDur, imagen, album, idBD);
         break;
         case "row":
-          await addRow(cancionName, artista, cancionDur, imagen, album);
+          await addRow(cancionName, artista, cancionDur, imagen, album, idBD);
         break;
         case "initRadio":
-          await cancionNew(cancionName, artista, cancionDur, imagen, album)
+          await cancionNew(cancionName, artista, cancionDur, imagen, album, idBD)
           break;
         case "addRadio":
           //recibir recomendacion
@@ -731,6 +731,7 @@ async function cancionesPreview() {
   let cancionName = document.getElementById('name'+index).innerHTML
   let cancionDur = document.getElementById('dur'+index).innerHTML
   let imagen = document.getElementById('imgS'+index)
+  let idBD = document.getElementById('songBD'+index)
   if (imagen === null) {
   }else{
     imagen = imagen.src
@@ -757,11 +758,11 @@ async function cancionesPreview() {
             preview.volume+=0.001;
           }
           }, 10);
-      await cancionNew(cancionName, artista, cancionDur, imagen, album)
+      await cancionNew(cancionName, artista, cancionDur, imagen, album, idBD)
     })
     cancion.addEventListener('contextmenu', async function(event) {
       event.preventDefault();
-      await openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong)
+      await openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong, idBD)
     });
     if (cancion.getAttribute('value') =='nulo') {
       cancion.addEventListener('mouseenter',function name() {
@@ -1096,40 +1097,41 @@ function msToTime(duration) {
 // Evento click en los enlaces del navegador
 document.getElementById('Nindex').addEventListener('click', async function(e) {
   e.preventDefault();
+  console.log('funca')
   await cargarContenido('../primerosPasos/Sections/Screens/home2.html');
 });
-document.getElementById('Iindex').addEventListener('click', async function(e) {
-    e.preventDefault();
-    await cargarContenido(`../primerosPasos/Sections/Screens/home2.html`);
-});
-document.getElementById('Nbiblioteca').addEventListener('click', async function(e) {
-    e.preventDefault();
-    await cargarContenido(`../primerosPasos/Sections/Screens/library.php`);
-    await cancionesPreview();
-    await artistasPreview();
-    let albumsCant = document.getElementById('albums.length') 
-    for (let index = 1; index <= albumsCant.innerHTML; index++) {
-      let album = document.getElementById('album'+index)
-      let albumNombre = document.getElementById('albumName'+index)
-      await albumsPreview(album, index)
-      album.addEventListener('click', async function name(e) {
-        e.preventDefault()
-        await goToAlbum(albumNombre.innerHTML, nombreArtista.innerHTML, album.getAttribute('value'));
+// document.getElementById('Iindex').addEventListener('click', async function(e) {
+//     e.preventDefault();
+//     await cargarContenido(`../primerosPasos/Sections/Screens/home2.html`);
+// });
+// document.getElementById('Nbiblioteca').addEventListener('click', async function(e) {
+//     e.preventDefault();
+//     await cargarContenido(`../primerosPasos/Sections/Screens/library.php`);
+//     await cancionesPreview();
+//     await artistasPreview();
+//     let albumsCant = document.getElementById('albums.length') 
+//     for (let index = 1; index <= albumsCant.innerHTML; index++) {
+//       let album = document.getElementById('album'+index)
+//       let albumNombre = document.getElementById('albumName'+index)
+//       await albumsPreview(album, index)
+//       album.addEventListener('click', async function name(e) {
+//         e.preventDefault()
+//         await goToAlbum(albumNombre.innerHTML, nombreArtista.innerHTML, album.getAttribute('value'));
 
-      });
-  }
-});
+//       });
+//   }
+// });
 document.getElementById('Nemociones').addEventListener('click', async function(e) {
     e.preventDefault();
     await cargarContenido(`../primerosPasos/Sections/Screens/moods.php`);
     await cancionesPreview();
     // await albumsPreview();
 });
-document.getElementById('Nartistas').addEventListener('click', async function(e) {
-    e.preventDefault();
-    await cargarContenido('Assets/Artistas.php');
-    await artistasPreview()
-});
+// document.getElementById('Nartistas').addEventListener('click', async function(e) {
+//     e.preventDefault();
+//     await cargarContenido('Assets/Artistas.php');
+//     await artistasPreview()
+// });
 document.getElementById('Nplaylists').addEventListener('click', async function(e) {
     e.preventDefault();
     await cargarContenido('../primerosPasos/Sections/Screens/Playlists.php');

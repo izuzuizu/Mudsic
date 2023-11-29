@@ -71,8 +71,9 @@
                                 <p id="dur'.$cancionesL.'">'.$duracion.'</p>
                                 <p id="albumSong'.$cancionesL.'">'.$albumName.'</p>
                                 <p id="artistaId">'.$artistId.'</p>
-                                </div> ';
-                                    }
+                            </div>
+                            ';
+                        }
                         break;
                     case 'Album':
                         $sql2 = "SELECT * from albumes WHERE nombre ='$name'";

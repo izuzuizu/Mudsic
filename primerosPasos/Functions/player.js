@@ -12,7 +12,7 @@ let todo = document.getElementById('todo');
 let cancionActual = 0;
 let clickVolumen = false
 let form = document.getElementById("reaccion");
-let emocion = document.getElementById('emotion')
+let emocion = document.getElementById('reaccionB')
 let song = document.getElementById('song')
 let songName = document.getElementById('nombreCancion')
 let artistName = document.getElementById('artistaCancion')
@@ -56,14 +56,13 @@ window.addEventListener('keydown', function (event) {
 });
 async function reaccionar() {
   let boton = document.getElementById('reaccionB')
-  console.log(emocion)
-  emocion.value = 1
-  song.value= canciones[cancionActual].nombre
-  console.log('subiendo reaccion: '+emocion.value+' de '+song.value)
+  console.log(canciones[cancionActual])
+  // song.value= canciones[cancionActual].nombre
+  console.log('subiendo reaccion: emocion:'+emocion.value+' de '+canciones[cancionActual].nombre)
   // Enviar los datos del formulario mediante AJAX
-  let formData = new FormData(form);
-  let queryParams = new URLSearchParams(formData).toString();
-  let response = await fetch(`../primerosPasos/Functions/reaction.php?${queryParams}`, {
+  // let formData = new FormData(form);
+  // let queryParams = new URLSearchParams(formData).toString();
+  let response = await fetch(`../primerosPasos/Functions/reaction.php?emocionId=${emocion.value}&songId=${canciones[cancionActual].idBD}`, {
     method: 'GET'
   });
 }
@@ -138,39 +137,42 @@ rango.addEventListener('click',
       clickRango = true
     }
 )
-async function agregarALaFila(url, imagen, nombre, artista, duracion, album) {
+async function agregarALaFila(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
     url: url,
     imagen: imagen,
     nombre: nombre,
     artista: artista,
     album: album,
-    duracion: duracion
+    duracion: duracion,
+    idBD:idBD
   };
   canciones.push(cancion);
 }
-async function nuevaCancion(url, imagen, nombre, artista, duracion, album) {
+async function nuevaCancion(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
     url: url,
     imagen: imagen,
     nombre: nombre,
     artista: artista,
     album: album,
-    duracion: duracion
+    duracion: duracion,
+    idBD:idBD
   };
   canciones.push(cancion);
   cancionActual = canciones.length-1
   reproducir()
   actualizar()
 }
-async function siguienteCancion(url, imagen, nombre, artista, duracion, album) {
+async function siguienteCancion(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
     url: url,
     imagen: imagen,
     nombre: nombre,
     artista: artista,
     album: album,
-    duracion: duracion
+    duracion: duracion,
+    idBD:idBD
   };
   canciones.splice((cancionActual+1), 0 , cancion);
   actualizar()
@@ -180,11 +182,12 @@ async function reproducirSiguienteCancion() {
   cancionActual++;
   if (cancionActual > (canciones.length-1)) {
     cancionActual = 0; // Reinicia al comienzo de la lista si llega al final
-  }  
-  musica.src=canciones[cancionActual].url
-  musica.load();
-  reproducir()
-  actualizar()
+  }else{
+    musica.src=canciones[cancionActual].url
+    musica.load();
+    reproducir()
+    actualizar()
+  }
 }
 function actualizar() {
   imagenSong.src = canciones[cancionActual].imagen
@@ -203,29 +206,113 @@ function actualizar() {
 }
 function reproducirAnteriorCancion() {
   if (musica.currentTime<5) {
-    
-  if (cancionActual>0) {
-  cancionActual= cancionActual-1;
-  }
+    if (cancionActual>0) {
+    cancionActual= cancionActual-1;
+    }
   }
   
   if (cancionActual > canciones.length) {
     cancionActual = 0; // Reinicia al comienzo de la lista si llega al final
+  }else{
+    musica.src=canciones[cancionActual].url
+    musica.load();
+    reproducir()
+    actualizar()
   }
-  musica.src=canciones[cancionActual].url
 
   // musica.innerHTML = `
   // <source src ="${canciones[cancionActual].url}" type ="audio/mpeg" preload="auto">
   // `
-  musica.load();
-  reproducir()
-  actualizar()
 }
 musica.addEventListener('ended', async function() {
   await reproducirSiguienteCancion();
   await interaccion('Cancion', canciones[cancionActual].nombre)
   actualizar()
 });
+     const emojisPositive = ['👍', '😍', '👍', '😈', '🤣', '😄', '🥳', '😴', '👹', '🚀'];
+    const emojisNegative = ['👎', '🤮', '💔', '😭', '😡', '😭'];
+
+    // Define el estado actual
+    let currentState = 'positive'; // Puede ser 'positive' o 'negative'
+
+    // Llama a la función para cargar inicialmente los emojis positivos
+    updateEmojiList();
+
+    function toggleLikeDislike() {
+        // Obtiene el contenedor de emoji activo
+        const activeEmojiContainer = document.querySelector('.emojiToggleContainer');
+
+        // Cambia el estado y actualiza el contenedor de emoji activo
+        currentState = currentState === 'positive' ? 'negative' : 'positive';
+        updateActiveEmojiContainer(activeEmojiContainer);
+
+        // Actualiza la lista de emojis en el menú
+        updateEmojiList();
+    }
+
+    function updateActiveEmojiContainer(emojiContainer) {
+        // Actualiza el contenido del contenedor de emoji según el estado actual
+        emojiContainer.innerHTML = currentState === 'positive'
+            ? `<div class="emojiToggleText activeEmoji">${emojisPositive[0]}</div><div class="emojiToggleText">${emojisNegative[0]}</div>`
+            : `<div class="emojiToggleText">${emojisPositive[0]}</div><div class="emojiToggleText activeEmoji">${emojisNegative[0]}</div>`;
+    }
+
+    function updateEmojiList() {
+        // Obtiene el contenedor de la lista de emojis
+        const emojiListContainer = document.querySelector('.flatList');
+
+        // Actualiza la lista de emojis según el estado actual
+        const emojis = currentState === 'positive' ? emojisPositive : emojisNegative;
+
+        // Crea el HTML para la lista de emojis
+        const emojiListHTML = emojis.map(emoji => `<div class="item" onclick="handleItemClick('${emoji}')"><div class="itemEmoji">${emoji}</div></div>`).join('');
+
+        // Actualiza el contenido del contenedor de la lista de emojis
+        emojiListContainer.innerHTML = emojiListHTML;
+    }
+
+    function abrirReacciones() {
+        var checkbox = document.getElementById("reactions");
+        checkbox.checked = !checkbox.checked;
+        openModal();
+    }
+
+    // Ejemplo de cómo usar la función en un botón o evento
+    const toggleButton = document.getElementById('toggleButton');
+    toggleButton.addEventListener('click', toggleLikeDislike);
+
+    // function openModal() {
+    //     // document.getElementById("reactionsCont").style.display = "flex";         
+    //     // var botonReaccion = document.getElementById("reaccionB");
+        
+    // }
+    function openModal() {
+        var config = document.getElementById("reactionsCont");
+        var checkbox = document.getElementById("reactions");
+
+        // Si el checkbox está marcado, establece la opacidad en 1, de lo contrario, en 0.5
+        config.style.display = checkbox.checked ? "flex" : "none";
+         
+    }
+    document.addEventListener('click', function(event) {
+        if (event.target === checkbox) {
+        }else{
+            config.style.display = 'none'
+        }
+    });
+    var botonReaccion = document.getElementById("reaccionB");
+    
+    document.addEventListener('click', function(event) {
+        if (event.target === botonReaccion) {
+            document.getElementById("reactionsCont").style.display = 'none'
+        }else{
+            document.getElementById("reactionsCont").style.display = 'none'
+        }
+    });  
+    function handleItemClick(item) {
+        console.log(item);
+        openModal();
+  }
 musica.ontimeupdate = function() {
   actualizar()
   if ('mediaSession' in navigator) {

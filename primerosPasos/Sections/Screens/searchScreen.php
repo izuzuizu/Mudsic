@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <?php
+    include('conexion.php');
             function search($busqueda, $token) {
                 $url = "https://api.spotify.com/v1/search?q=$busqueda&type=album,artist,playlist,track&market=AR";
                 $headers = array(
@@ -64,6 +65,13 @@
     <div id="cancionesBusqueda">
         <?php
         for ($i=0; $i < count($resultado['tracks']['items']); $i++) { 
+            $idSong ='';
+            $idSpotify = $resultado['tracks']['items'][$i]['id'];
+            $sql="SELECT * from canciones Where idSpotify = '$idSpotify'";
+            $resulta = mysqli_query($conexion, $sql); 
+            while ( $row2 = mysqli_fetch_assoc($resulta)) {
+                $idSong = $row2['id'];
+            }     
             $cancion = $resultado['tracks']['items'][$i]['name'];
             $artista = $resultado['tracks']['items'][$i]['artists'][0]['name'];
             $album = $resultado['tracks']['items'][$i]['album']['name'];
@@ -105,6 +113,7 @@
                 <p id="dur'.($i+1).'">'.$formattedTime.'</p>
                 <p id="albumSong'.($i+1).'">'.$album.'</p>
                 <p style="display:none;" id="artistaIdSong'.($i+1).'">'.$resultado['tracks']['items'][$i]['artists'][0]['id'].'</p>
+                <p id="songBD'.($i+1).'">'.$idSong.'</p>
             </div> 
         ';
         }
