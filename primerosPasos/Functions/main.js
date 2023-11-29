@@ -1,5 +1,5 @@
 let audioPlayer = document.getElementById('actual');
-const contenido = document.querySelector('.contenido');
+const contenido = document.getElementById('containerSec');
 let cancionesData
 let accessToken
 let artistaId = ''

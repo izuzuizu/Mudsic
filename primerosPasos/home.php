@@ -52,11 +52,11 @@
     aside nav{
         display: flex;
         flex-direction: column;
-        height: 60%;
+        height: 80%;
         width: 100%;
         align-items: center;
         justify-content: space-around;
-        padding: 20px 10px;
+        padding: 15px 20px;
         border-radius: 10px;
         background-color: aliceblue;
 
@@ -91,13 +91,13 @@
         align-items: center;
         margin-bottom: 20px;
     }
-    .cont .row h2{
+    .cont h2{
         width: 100%;
         height: 46px;    
         padding: 5px 45px;
         text-shadow: 1px 1px 7px black;
     }
-    .cont .row .elementos{        
+    .cont .elementos{        
         max-width: 95%;         
         height: 290px;
         display: flex;
@@ -119,7 +119,7 @@
         border-radius: 20px;       /* roundness of the scroll thumb */
         border: 4px solid rgb(46, 46, 46);
     }
-    .cont .row .elementos .elemento{
+    .cont .elemento{
         width: 238px;
         height: 250px;
         display: flex;
@@ -131,7 +131,7 @@
         background-color: rgb(37 37 37);
         box-shadow: 0px 0px 5px 2px rgb(12 12 12 / 87%);
     }
-    .cont .row .elementos .elemento img{
+    .cont .elemento img{
         width: 180px;
         height: 180px;
         /* min-width: 180px; */
@@ -139,7 +139,7 @@
         object-fit: cover;
         padding: 7px;
     }
-    .cont .row .elementos .elemento .text{
+    .cont .elemento .text{
         display: flex;
         align-items: center;
         flex-direction: column;
@@ -148,7 +148,7 @@
         height: 100%;
         width: 100%;
     }
-    .cont .row .elementos .elemento label#nombre{
+    .cont .elemento label#nombre, p#name, p.name{
         font-size: 1rem;
         width: 90%;
         line-height: 15px;
@@ -158,12 +158,39 @@
         overflow: hidden;
         -webkit-line-clamp: 2
     }
-    .cont .row .elementos .elemento label#autor{
+    .cont .elemento label#autor, p#artist, .generos{
         font-size: 0.7rem;
         margin-top: 2px;
         display: block;
         max-height: 1em; /* Ajusta la altura máxima según tus necesidades */
         overflow: hidden;
+    }
+    .cont .biblioteca{
+        display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: auto;
+    gap: 15px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    padding: 20px 20px 40px 20px;
+    overflow-x: hidden;        
+    overflow-y: scroll;
+    }
+    .cont h1{
+        padding: 10px 30px
+    }
+    .cont .biblioteca .elemento{
+        width: 210px;
+        height: 227px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        padding: 7px 0 2px 0;
+        margin: 5px 5px;
+        background-color: rgb(37 37 37);
+        box-shadow: 0px 0px 5px 2px rgb(12 12 12 / 87%);
     }
 </style>
 <!DOCTYPE html>
@@ -204,20 +231,20 @@
                     <li><a href="" id="Nplaylists">Listas</a></li>
                 </ul> -->
                 <label id="Nindex">
-                        <img src="../primerosPasos/imagenes/house-solid.svg" alt="home">
+                        <img src="imagenes/house-solid.svg" alt="home">
                 </label>
                 <label id="Nemociones">
-                    <img src="../primerosPasos/imagenes/heart-solid.svg" alt="favs" srcset="">
+                    <img src="imagenes/heart-solid.svg" alt="favs" srcset="">
                 </label>
                 <label id="Nhistorial">
-                    <img src="../primerosPasos/imagenes/clock-rotate-left-solid (1).svg" alt="history" srcset="">
+                    <img src="imagenes/clock-rotate-left-solid.svg" alt="history" srcset="">
                 </label>
                 <label id="Nplaylists">
-                    <img src="../primerosPasos/imagenes/list-solid.svg" alt="lists" srcset="">
+                    <img src="imagenes/list-solid.svg" alt="lists" srcset="">
                 </label>
             </nav>            
         </aside>
-        <div class="contenido" id="containerSec"></div>        
+        <div class="cont" id="containerSec"></div>        
     </div>    
     <div class="reproductor">
         <?php

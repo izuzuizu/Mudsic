@@ -59,127 +59,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <h1>buscado: </h1>
-    <h2 id="buscado"><?php echo $busqueda ?></h2>
-    <h3>Canciones:</h3>
-    <div id="cancionesBusqueda">
-        <?php
-        for ($i=0; $i < count($resultado['tracks']['items']); $i++) { 
-            $idSong ='';
-            $idSpotify = $resultado['tracks']['items'][$i]['id'];
-            $sql="SELECT * from canciones Where idSpotify = '$idSpotify'";
-            $resulta = mysqli_query($conexion, $sql); 
-            while ( $row2 = mysqli_fetch_assoc($resulta)) {
-                $idSong = $row2['id'];
-            }     
-            $cancion = $resultado['tracks']['items'][$i]['name'];
-            $artista = $resultado['tracks']['items'][$i]['artists'][0]['name'];
-            $album = $resultado['tracks']['items'][$i]['album']['name'];
-            $link = $resultado['tracks']['items'][$i]['preview_url'];
-            if ($link == '') {
-                // $link = getDeezerPreviewLink($resultado['tracks']['items'][$i]['name'], $artista);
-                $previewLink = 'nulo';
+    <h1>Resultados: </h1>
+    <h3 style="display: none;" id="buscado"><?php echo $busqueda ?></h3>
+    <div class="row">
+    <h2>Canciones:</h2>
+        <div id="cancionesBusqueda" class="elementos">
+            <?php
+            for ($i=0; $i < count($resultado['tracks']['items']); $i++) { 
+                $idSong ='';
+                $idSpotify = $resultado['tracks']['items'][$i]['id'];
+                $sql="SELECT * from canciones Where idSpotify = '$idSpotify'";
+                $resulta = mysqli_query($conexion, $sql); 
+                if ($resulta) {
+                    while ( $row2 = mysqli_fetch_assoc($resulta)) {
+                        $idSong = $row2['id'];
+                    }    
+                } 
+                $cancion = $resultado['tracks']['items'][$i]['name'];
+                $artista = $resultado['tracks']['items'][$i]['artists'][0]['name'];
+                $album = $resultado['tracks']['items'][$i]['album']['name'];
+                $link = $resultado['tracks']['items'][$i]['preview_url'];
+                $seconds = floor($resultado['tracks']['items'][$i]['duration_ms'] / 1000); // Convertir a segundos
+                $minutes = floor($seconds / 60); // Obtener el número de minutos
+                $remainingSeconds = $seconds % 60; // Obtener los segundos restantes
+                $formattedTime = sprintf('%02d:%02d', $minutes, $remainingSeconds); // Formatear el tiempo en MM:SS
+            echo '
+                <div class="elemento" id="cancion'.($i+1).'" value="'.$link.'">';
+                    if (isset($resultado['tracks']['items'][$i]['album']['images'][2]['url'])) {
+                        echo '
+                            <img id="imgS'.($i+1).'" src="'.$resultado['tracks']['items'][$i]['album']['images'][0]['url'].'" alt="">
+                        ';
+                    }
                 echo '
-                    <style>
-                        #cancion'.($i+1).'{
-                            background-color:#7fc3ff;
-                        }
-                    </style>
-                ';
-                }else{
-                    echo'
-                    <style>
-                        #cancion'.($i+1).'{
-                            background-color: green;
-                        }
-                    </style>
-                    ';
-                }
-            $seconds = floor($resultado['tracks']['items'][$i]['duration_ms'] / 1000); // Convertir a segundos
-            $minutes = floor($seconds / 60); // Obtener el número de minutos
-            $remainingSeconds = $seconds % 60; // Obtener los segundos restantes
-            $formattedTime = sprintf('%02d:%02d', $minutes, $remainingSeconds); // Formatear el tiempo en MM:SS
-
-        echo '
-            <div id="cancion'.($i+1).'" value="'.$link.'"  style="width:30%">';
-                if (isset($resultado['tracks']['items'][$i]['album']['images'][2]['url'])) {
-                    echo '
-                        <img id="imgS'.($i+1).'" src="'.$resultado['tracks']['items'][$i]['album']['images'][0]['url'].'" style="width:20%; height:20%" alt="">
-                    ';
-                }
-            echo '
-                <p id="name'.($i+1).'">'.$cancion.'</p>
-                <p id="artist'.($i+1).'">'.$artista.'</p>
-                <p id="dur'.($i+1).'">'.$formattedTime.'</p>
-                <p id="albumSong'.($i+1).'">'.$album.'</p>
-                <p style="display:none;" id="artistaIdSong'.($i+1).'">'.$resultado['tracks']['items'][$i]['artists'][0]['id'].'</p>
-                <p id="songBD'.($i+1).'">'.$idSong.'</p>
-            </div> 
-        ';
-        }
-        echo '
-        <p id="canciones.length" value="'.$i.'">'.$i.'</p>
-        ';
-        
-        ?>
-    </div>
-    <h3>Artistas:</h3>
-    <div id="artistasBusqueda">
-        <?php
-        for ($i=0; $i < count($resultado['artists']['items']); $i++) { 
-        echo '
-            <div id="artista'.($i+1).'" value="'.$resultado['artists']['items'][$i]['id'].'">
-                <p id="artista'.($i+1).'name">'.$resultado['artists']['items'][$i]['name'].'</p>';
-                if (isset($resultado['artists']['items'][$i]['images'][0]['url'])) {
-                    echo '<img src="'.$resultado['artists']['items'][$i]['images'][0]['url'].'" style="width: 250px ; heigth: 250px;" alt="">';
-                } else {
-                    // Proporciona un valor predeterminado o salta esta parte del código
-                    // echo '<img src="'.$resultado['artists']['items'][$i]['images'][0]['url'].'" style="width: 250px ; heigth: 250px;" alt="">';
-                }
-                echo '<p>Popularidad: '.$resultado['artists']['items'][$i]['popularity'].'</p>
-                <p>generos: '.implode(' ', $resultado['artists']['items'][$i]['genres']).'</p>
-            </div>
+                    <div class="text">
+                        <p id="name'.($i+1).'">'.$cancion.'</p>
+                        <p id="artist'.($i+1).'">'.$artista.'</p>
+                        <p style="display: none;" id="dur'.($i+1).'">'.$formattedTime.'</p>
+                        <p style="display: none;" id="albumSong'.($i+1).'">'.$album.'</p>
+                        <p style="display: none;" id="artistaIdSong'.($i+1).'">'.$resultado['tracks']['items'][$i]['artists'][0]['id'].'</p>
+                        <p style="display: none;" id="songBD'.($i+1).'">'.$idSong.'</p>
+                    </div>
+                </div> 
             ';
-        }
-        
-        echo '
-        <p id="artistas.length" value="'.$i.'">'.$i.'</p>
-        ';
-        ?>
-    </div>
-    <h3>Albums</h3>
-    <div id="albumsBusqueda">
-        
-    <?php
-        for ($i=0; $i < count($resultado['albums']['items']); $i++) { 
+            }
             echo '
-                <div id="album'.($i+1).'" value="'.$resultado['albums']['items'][$i]['id'].'">
-                        <p id="albumName'.($i+1).'" >'.$resultado['albums']['items'][$i]['name'].'</p>';
-                        echo '<p>'.$resultado['albums']['items'][$i]['album_type'].'</p>';
-
-                        if (isset($resultado['albums']['items'][$i]['images'][0]['url'])) {
-                            echo '<img src="'.$resultado['albums']['items'][$i]['images'][0]['url'].'" style="width: 250px ; heigth: 250px;" alt="">';
+            <p id="canciones.length" value="'.$i.'">'.$i.'</p>
+            ';
+            
+            ?>
+        </div>
+    </div>
+    <div class="row">
+        <h2>Artistas:</h2>
+            <div id="artistasBusqueda" class="elementos">
+                <?php
+                for ($i=0; $i < count($resultado['artists']['items']); $i++) { 
+                echo '
+                    <div class="elemento" id="artista'.($i+1).'" value="'.$resultado['artists']['items'][$i]['id'].'">';
+                        if (isset($resultado['artists']['items'][$i]['images'][0]['url'])) {
+                            echo '<img src="'.$resultado['artists']['items'][$i]['images'][0]['url'].'" alt="">';
                         } else {
                             // Proporciona un valor predeterminado o salta esta parte del código
+                            // echo '<img src="'.$resultado['artists']['items'][$i]['images'][0]['url'].'" style="width: 250px ; heigth: 250px;" alt="">';
                         }
-                        echo '<p>artista/s:</p>';
-                        foreach ($resultado['albums']['items'][$i]['artists'] as $artista) {
-                            echo '<p id="artistaAlbum'.($i+1).'">'.$artista['name'].'</p>';
-                            # code...
-                        }
-                        echo'
-                        <p>canciones: </p>
-                        <p id ="cantCancionesAlbum'.($i+1).'">'.$resultado['albums']['items'][$i]['total_tracks'].'</p>
+                        echo '
+                        <div class="text">
+                        <p class="name" id="artista'.($i+1).'name">'.$resultado['artists']['items'][$i]['name'].'</p>
+                        <p style="display: none;">Popularidad: '.$resultado['artists']['items'][$i]['popularity'].'</p>
+                        <p class="generos">generos: '.implode(' ', $resultado['artists']['items'][$i]['genres']).'</p>
+                        </div>
                     </div>
+                    ';
+                }
+                
+                echo '
+                <p style="display: none;" id="artistas.length" value="'.$i.'">'.$i.'</p>
                 ';
-
-        }
-        echo '
-        <p id="albums.length" value="'.$i.'">'.$i.'</p>
-        ';
-    ?>
-
+                ?>
+            </div> 
     </div>
+    <div class="row">
+    <h2>Albumes</h2>
+    <div id="albumsBusqueda" class="elementos">
+            
+            <?php
+                for ($i=0; $i < count($resultado['albums']['items']); $i++) { 
+                    echo '
+                        <div class="elemento" id="album'.($i+1).'" value="'.$resultado['albums']['items'][$i]['id'].'">';
+                                echo '<p style="display: none;">'.$resultado['albums']['items'][$i]['album_type'].'</p>';
+
+                                if (isset($resultado['albums']['items'][$i]['images'][0]['url'])) {
+                                    echo '<img src="'.$resultado['albums']['items'][$i]['images'][0]['url'].'" alt="">';
+                                } else {
+                                    // Proporciona un valor predeterminado o salta esta parte del código
+                                }
+                                echo'
+                                <p class="name" id="albumName'.($i+1).'" >'.$resultado['albums']['items'][$i]['name'].'</p>
+                                <div class="artists" style="display: flex; flex-direction: row;">
+                                ';
+                                foreach ($resultado['albums']['items'][$i]['artists'] as $artista) {
+                                    echo '
+                                    <p class="generos" id="artistaAlbum'.($i+1).'">'.$artista['name'].'</p>';
+                                    # code...
+                                }
+                                echo'
+                                </div>
+                                <p style="display: none;" id ="cantCancionesAlbum'.($i+1).'">'.$resultado['albums']['items'][$i]['total_tracks'].'</p>
+                            </div>
+                        ';
+
+                }
+                echo '
+                <p id="albums.length" value="'.$i.'">'.$i.'</p>
+                ';
+            ?>
+
+        </div>
+    </div>
+        
     <script src="busqueda.js"></script>
 </body>
 </html>
