@@ -152,6 +152,11 @@ let orderPlaylist = []
 let playlistName
 let playlistDesc
 let actualPlaylistId
+let contextMenu = document.getElementById('contextMenu')
+let contextMenu2 = document.getElementById('contextMenu2')
+
+
+
 
 
 async function getToken() {
@@ -656,10 +661,13 @@ async function radio(artist, track, album) {
         })
           .catch(error => console.error(error));
 }
-async function contextMenuSecondOption(){
+async function contextMenuSecondOption(cont, event){
+  
+  contextMenu.style.left = event.pageX + 'px';
+  contextMenu.style.top = event.pageY + 'px';
+  contextMenu2.innerHTML = cont
 }
 async function openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong, idBD) {
-  let contextMenu = document.getElementById('contextMenu')
   contextMenuPressed = true
   let options = document.querySelectorAll('.option')
   contextMenu.style.display = 'block';
@@ -674,16 +682,22 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
     option.addEventListener('mouseleave', async function () {
       option.style.backgroundColor = 'green'
     })
-    option.addEventListener('click',async function name(params) {
+    option.addEventListener('click',async function name(event) {
       switch (option.id) {
         case "next":
           await cancionNext(cancionName, artista, cancionDur, imagen, album, idBD);
+          contextMenu.style.display = 'none'
+
         break;
         case "row":
           await addRow(cancionName, artista, cancionDur, imagen, album, idBD);
+          contextMenu.style.display = 'none'
+
         break;
         case "initRadio":
           await cancionNew(cancionName, artista, cancionDur, imagen, album, idBD)
+          contextMenu.style.display = 'none'
+
           break;
         case "addRadio":
           //recibir recomendacion
@@ -692,6 +706,8 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
           await radio(artista, cancionName, album)
           // .then(tags => console.log(tags));
           // await cancionNew(cancionName, artista, cancionDur, imagen, album)
+          contextMenu.style.display = 'none'
+
           break;
         case "like":
           await reaccionar()
@@ -701,13 +717,12 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
         case 'addLibrary':
           break;
         case 'addToPlaylist':
-          let options = []
-          contextMenuSecondOption()
+          let cont = await fetch('./Functions/getPlaylistsContext.php')
+          await contextMenuSecondOption(cont, event)
           break;
         default:
           break;
       }
-          contextMenu.style.display = 'none'
     })
   })
 }
@@ -1140,7 +1155,7 @@ document.getElementById('Nplaylists').addEventListener('click', async function(e
 document.getElementById('Nhistorial').addEventListener('click', async function(e) {
     e.preventDefault();
     await cargarContenido('../primerosPasos/Sections/Screens/history.php');
-    await playlistsPreview()
+    // await playlistsPreview()
     await cancionesPreview();
     await artistasPreview();
     let albumsCant = document.getElementById('albums.length') 

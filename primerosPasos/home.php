@@ -206,16 +206,18 @@
   </audio>
 </head>
 <body>
-    <div id="contextMenu" style="display: none; position: absolute;">
+    <div id="contextMenu" style="display: none; position: absolute; z-index:12">
         <p class="option" id="next">Reproducir a continuacion</li>
         <p class="option" id="row">agregar a la fila</p>
         <p class="option" id="initRadio">Iniciar Radio</p>
         <p class="option" id="addRadio">Agregar Radio</p>
         <p class="option" id="like">Me Gusta</p>
-        <p class="option" id="emotion">Emocion ></p>
+        <p class="option" id="emotion" onclick="abrirReacciones()">Emocion ></p>
         <p class="option" id="addLibrary">Agregar a Biblioteca</p>
         <p class="option" id="addToPlaylist">Agregar a Playlist ></p>
         <!-- <li id="dele">eliminar de la fila</li> -->
+    </div>
+    <div id="contextMenu2" style="display: none; position: absolute; z-index:12">
     </div>
     <?php
         include('./Sections/nav.html')

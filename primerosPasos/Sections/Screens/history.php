@@ -173,8 +173,8 @@
                         //         <p id="timeArtist'.$artistasL.'" >'.$time.'</p>
                         //         </div>';
                         // }
-                        echo ':Playlist:';
-                        break;
+                        // echo ':Playlist:';
+                        // break;
                     default:
                         break;
                     

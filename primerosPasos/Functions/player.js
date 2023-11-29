@@ -108,7 +108,11 @@ function volumenBajo () {
   }
 }
 function abrirVolumen() {
-  volumen.style.display = 'block' //esto se cumple cuando se toca el boton que abre el input rango del volumen
+  if (volumen.style.display == 'block') {
+    volumen.style.display = 'none' //esto se cumple cuando se toca el boton que abre el input rango del volumen  
+  } else {
+    volumen.style.display = 'block' //esto se cumple cuando se toca el boton que abre el input rango del volumen  
+  }
 }
 function repetir() {
   console.log(musica.played)
@@ -229,90 +233,6 @@ musica.addEventListener('ended', async function() {
   await interaccion('Cancion', canciones[cancionActual].nombre)
   actualizar()
 });
-     const emojisPositive = ['👍', '😍', '👍', '😈', '🤣', '😄', '🥳', '😴', '👹', '🚀'];
-    const emojisNegative = ['👎', '🤮', '💔', '😭', '😡', '😭'];
-
-    // Define el estado actual
-    let currentState = 'positive'; // Puede ser 'positive' o 'negative'
-
-    // Llama a la función para cargar inicialmente los emojis positivos
-    updateEmojiList();
-
-    function toggleLikeDislike() {
-        // Obtiene el contenedor de emoji activo
-        const activeEmojiContainer = document.querySelector('.emojiToggleContainer');
-
-        // Cambia el estado y actualiza el contenedor de emoji activo
-        currentState = currentState === 'positive' ? 'negative' : 'positive';
-        updateActiveEmojiContainer(activeEmojiContainer);
-
-        // Actualiza la lista de emojis en el menú
-        updateEmojiList();
-    }
-
-    function updateActiveEmojiContainer(emojiContainer) {
-        // Actualiza el contenido del contenedor de emoji según el estado actual
-        emojiContainer.innerHTML = currentState === 'positive'
-            ? `<div class="emojiToggleText activeEmoji">${emojisPositive[0]}</div><div class="emojiToggleText">${emojisNegative[0]}</div>`
-            : `<div class="emojiToggleText">${emojisPositive[0]}</div><div class="emojiToggleText activeEmoji">${emojisNegative[0]}</div>`;
-    }
-
-    function updateEmojiList() {
-        // Obtiene el contenedor de la lista de emojis
-        const emojiListContainer = document.querySelector('.flatList');
-
-        // Actualiza la lista de emojis según el estado actual
-        const emojis = currentState === 'positive' ? emojisPositive : emojisNegative;
-
-        // Crea el HTML para la lista de emojis
-        const emojiListHTML = emojis.map(emoji => `<div class="item" onclick="handleItemClick('${emoji}')"><div class="itemEmoji">${emoji}</div></div>`).join('');
-
-        // Actualiza el contenido del contenedor de la lista de emojis
-        emojiListContainer.innerHTML = emojiListHTML;
-    }
-
-    function abrirReacciones() {
-        var checkbox = document.getElementById("reactions");
-        checkbox.checked = !checkbox.checked;
-        openModal();
-    }
-
-    // Ejemplo de cómo usar la función en un botón o evento
-    const toggleButton = document.getElementById('toggleButton');
-    toggleButton.addEventListener('click', toggleLikeDislike);
-
-    // function openModal() {
-    //     // document.getElementById("reactionsCont").style.display = "flex";         
-    //     // var botonReaccion = document.getElementById("reaccionB");
-        
-    // }
-    function openModal() {
-        var config = document.getElementById("reactionsCont");
-        var checkbox = document.getElementById("reactions");
-
-        // Si el checkbox está marcado, establece la opacidad en 1, de lo contrario, en 0.5
-        config.style.display = checkbox.checked ? "flex" : "none";
-         
-    }
-    document.addEventListener('click', function(event) {
-        if (event.target === checkbox) {
-        }else{
-            config.style.display = 'none'
-        }
-    });
-    var botonReaccion = document.getElementById("reaccionB");
-    
-    document.addEventListener('click', function(event) {
-        if (event.target === botonReaccion) {
-            document.getElementById("reactionsCont").style.display = 'none'
-        }else{
-            document.getElementById("reactionsCont").style.display = 'none'
-        }
-    });  
-    function handleItemClick(item) {
-        console.log(item);
-        openModal();
-  }
 musica.ontimeupdate = function() {
   actualizar()
   if ('mediaSession' in navigator) {
@@ -419,3 +339,87 @@ musica.ontimeupdate = function() {
     time.innerHTML = `00:00`
   }
 };
+    const emojisPositive = ['👍', '😍', '👍', '😈', '🤣', '😄', '🥳', '😴', '👹', '🚀'];
+    const emojisNegative = ['👎', '🤮', '💔', '😭', '😡', '😭'];
+
+    // Define el estado actual
+    let currentState = 'positive'; // Puede ser 'positive' o 'negative'
+
+    // Llama a la función para cargar inicialmente los emojis positivos
+    updateEmojiList();
+
+    function toggleLikeDislike() {
+        // Obtiene el contenedor de emoji activo
+        const activeEmojiContainer = document.querySelector('.emojiToggleContainer');
+
+        // Cambia el estado y actualiza el contenedor de emoji activo
+        currentState = currentState === 'positive' ? 'negative' : 'positive';
+        updateActiveEmojiContainer(activeEmojiContainer);
+
+        // Actualiza la lista de emojis en el menú
+        updateEmojiList();
+    }
+
+    function updateActiveEmojiContainer(emojiContainer) {
+        // Actualiza el contenido del contenedor de emoji según el estado actual
+        emojiContainer.innerHTML = currentState === 'positive'
+            ? `<div class="emojiToggleText activeEmoji">${emojisPositive[0]}</div><div class="emojiToggleText">${emojisNegative[0]}</div>`
+            : `<div class="emojiToggleText">${emojisPositive[0]}</div><div class="emojiToggleText activeEmoji">${emojisNegative[0]}</div>`;
+    }
+
+    function updateEmojiList() {
+        // Obtiene el contenedor de la lista de emojis
+        const emojiListContainer = document.querySelector('.flatList');
+
+        // Actualiza la lista de emojis según el estado actual
+        const emojis = currentState === 'positive' ? emojisPositive : emojisNegative;
+
+        // Crea el HTML para la lista de emojis
+        const emojiListHTML = emojis.map(emoji => `<div class="item" onclick="handleItemClick('${emoji}')"><div class="itemEmoji">${emoji}</div></div>`).join('');
+
+        // Actualiza el contenido del contenedor de la lista de emojis
+        emojiListContainer.innerHTML = emojiListHTML;
+    }
+
+    function abrirReacciones() {
+        var checkbox = document.getElementById("reactions");
+        checkbox.checked = !checkbox.checked;
+        openModal();
+    }
+
+    // Ejemplo de cómo usar la función en un botón o evento
+    const toggleButton = document.getElementById('toggleButton');
+    toggleButton.addEventListener('click', toggleLikeDislike);
+
+    // function openModal() {
+    //     // document.getElementById("reactionsCont").style.display = "flex";         
+    //     // var botonReaccion = document.getElementById("reaccionB");
+        
+    // }
+    function openModal() {
+        var config = document.getElementById("reactionsCont");
+        var checkbox = document.getElementById("reactions");
+
+        // Si el checkbox está marcado, establece la opacidad en 1, de lo contrario, en 0.5
+        config.style.display = checkbox.checked ? "flex" : "none";
+         
+    }
+    document.addEventListener('click', function(event) {
+        if (event.target === checkbox) {
+        }else{
+            config.style.display = 'none'
+        }
+    });
+    var botonReaccion = document.getElementById("reaccionB");
+    
+    document.addEventListener('click', function(event) {
+        if (event.target === botonReaccion) {
+            document.getElementById("reactionsCont").style.display = 'none'
+        }else{
+            document.getElementById("reactionsCont").style.display = 'none'
+        }
+    });  
+    function handleItemClick(item) {
+        console.log(item);
+        openModal();
+  }
