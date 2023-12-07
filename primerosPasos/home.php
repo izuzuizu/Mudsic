@@ -182,12 +182,17 @@ if(isset($_GET["salir"])) {
     overflow-x: hidden;        
     overflow-y: scroll;
     }
-    .cont h1{
-        padding: 10px 30px
+    .cont h1, .cont .topCont{        
+        height: 60px;
+        width: 100%;
+        display: flex;
+        padding: 0 30px;
+        flex-direction: row;
+        align-items: center;
     }
     .cont .biblioteca .elemento{
         width: 210px;
-        height: 227px;
+        height: 250px;
         display: flex;
         flex-direction: column;
         justify-content: space-around;
