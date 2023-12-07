@@ -11,9 +11,14 @@
             // echo $row['ID_u'];
         }
     }else{
-        session_abort();
+        session_destroy();
         // header("location: index.php");
     }
+    
+if(isset($_GET["salir"])) {
+    // session_destroy();
+    header('Location: index.php');
+}
     ?>
 <style>
     .container {
@@ -22,7 +27,7 @@
     background-color: rgb(59, 59, 59);
     position: fixed;
     z-index: 10;
-    padding-top: 45px;
+    padding-top: 5px;
     padding-bottom: 45px;
     display: flex;
     }
@@ -81,7 +86,7 @@
     color: white;
     display: flex;
     flex-direction: column;
-    padding-top: 12px;
+    padding-top: 4%;
     }
     .cont .row{
         width: 100%;
@@ -192,6 +197,33 @@
         background-color: rgb(37 37 37);
         box-shadow: 0px 0px 5px 2px rgb(12 12 12 / 87%);
     }
+
+    #contextMenu{
+        display: none; 
+        position: absolute;
+    z-index: 10000000000;
+    width: auto;
+    height: auto;
+    background-color: #252525;
+    padding: 6px;
+    color: white;
+    box-shadow: 1px 1px 25px #0000008c;
+    }
+    #contextMenu p{
+        padding: 3px 8px;
+    height: 27px;
+    width: 200px;
+    text-transform: capitalize;
+    font-size: 0.8rem;
+    margin: 4px 0;
+    border-bottom: 1px solid gray;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    }
+    #contextMenu p:hover{
+        background-color: #343434;
+    }
 </style>
 <!DOCTYPE html>
 <html lang="en">
@@ -206,21 +238,24 @@
   </audio>
 </head>
 <body>
-    <div id="contextMenu" style="display: none; position: absolute; z-index:12">
+    <div id="contextMenu">
         <p class="option" id="next">Reproducir a continuacion</li>
         <p class="option" id="row">agregar a la fila</p>
         <p class="option" id="initRadio">Iniciar Radio</p>
-        <p class="option" id="addRadio">Agregar Radio</p>
+        <!-- <p class="option" id="addRadio">Agregar Radio</p> -->
         <p class="option" id="like">Me Gusta</p>
-        <p class="option" id="emotion" onclick="abrirReacciones()">Emocion ></p>
-        <p class="option" id="addLibrary">Agregar a Biblioteca</p>
+        <p class="option" id="emotion">Emocion ></p>
+        <!-- <p class="option" id="addLibrary">Agregar a Biblioteca</p> -->
         <p class="option" id="addToPlaylist">Agregar a Playlist ></p>
-        <!-- <li id="dele">eliminar de la fila</li> -->
+        <p class="option" id="goToArtist">Ir al Artista</p>
+        <p class="option" id="goToAlbum">Ir al Album</p>
+        <!-- <li id="dele">eliminar de la fila</li> -->
     </div>
+    <div style="display: none" id="resultsBd"></div>
     <div id="contextMenu2" style="display: none; position: absolute; z-index:12">
     </div>
     <?php
-        include('./Sections/nav.html')
+        include('./Sections/nav.php')
     ?>
     <div class="container">
         <aside>        
@@ -246,6 +281,8 @@
                 </label>
             </nav>            
         </aside>
+    <div style="height: 4%; width:100%" ></div>
+
         <div class="cont" id="containerSec"></div>        
     </div>    
     <div class="reproductor">

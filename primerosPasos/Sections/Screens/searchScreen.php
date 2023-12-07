@@ -97,7 +97,7 @@
                         <p style="display: none;" id="dur'.($i+1).'">'.$formattedTime.'</p>
                         <p style="display: none;" id="albumSong'.($i+1).'">'.$album.'</p>
                         <p style="display: none;" id="artistaIdSong'.($i+1).'">'.$resultado['tracks']['items'][$i]['artists'][0]['id'].'</p>
-                        <p style="display: none;" id="songBD'.($i+1).'">'.$idSong.'</p>
+                        <p style="display: none;" id="songBD'.($i+1).'">'.$idSpotify.'</p>
                     </div>
                 </div> 
             ';

@@ -54,9 +54,10 @@
                         <img id="imgS'.$i.'" src="'.$albumImg.'" style="width:50%; height:50%" alt="">
                         <p id="name'.$i.'">'.$nombre.'</p>
                         <p id="artist'.$i.'">'.$artist.'</p>
-                        <p id="dur'.$i.'">'.$duracion.'</p>
-                        <p id="albumSong'.$i.'">'.$albumName.'</p>
-                        <p id="artistaId">'.$artist.'</p>
+                        <p style="display: none;" id="dur'.$i.'">'.$duracion.'</p>
+                        <p style="display: none;" id="albumSong'.$i.'">'.$albumName.'</p>
+                        <p style="display: none;" id="artistaId">'.$artist.'</p>
+                        <p style="display: none;" id="artistaIdSong'.$i.'">'.$artist.'</p>
                     </div> 
                 ';
             }

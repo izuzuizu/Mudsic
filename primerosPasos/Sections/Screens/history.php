@@ -38,14 +38,16 @@
                 $tipo = $todo['tipo'];
                 $nombre = $todo['nombre'];
                 $time = $todo['horario'];
+                $idSP = $todo['idSpotify'];
                 switch ($tipo) {
                     case 'Cancion':
-                        $sql2 = "SELECT * from canciones WHERE nombre ='$nombre'";
+                        $sql2 = "SELECT * from canciones WHERE idSpotify ='$idSP'";
                         $canciones= mysqli_query($conexion, $sql2);
                         while ($cancion = mysqli_fetch_assoc($canciones)) {
                             $link = $cancion['previewUrl'];
                             $artistaId = $cancion['artista'];
                             $albumId = $cancion['album'];
+                            $idSpotify = $cancion['idSpotify'];
                             $sql2 = "SELECT * from artistas WHERE artista_idSpotify ='$artistaId'";
                             $artist= mysqli_query($conexion, $sql2);
                             if ($link == 'nulo') {
@@ -72,7 +74,9 @@
                                     <p style="display: none" id="dur'.$cancionesL.'">'.$duracion.'</p>
                                     <p style="display: none" id="albumSong'.$cancionesL.'">'.$albumName.'</p>
                                     <p style="display: none" id="artistaId">'.$artistId.'</p>
+                                    <p style="display: none;" id="artistaIdSong'.$cancionesL.'">'.$artistId.'</p>
                                     <p style="display: none" id="timeSong'.$cancionesL.'" >'.$time.'</p>
+                                    <p style="display: none" id="songBD'.$cancionesL.'" >'.$idSpotify.'</p>
                                 </div>
                             ';
                         }
@@ -96,7 +100,7 @@
                             $albumsL += 1;
                         echo'
                             <div class="elemento" id="'.strtolower($tipo).$albumsL.'" value="'.$albumId.'" style width="15%">
-                                <img id="imgS'.$albumsL.'" width="10%" height="10%" src="'.$albumImg.'" alt="">
+                                <img id="imgAl'.$albumsL.'" width="10%" height="10%" src="'.$albumImg.'" alt="">
                                 <div class="text">
                                 <h3 id="albumName'.$albumsL.'" >'.$nombre.'</h3>
                                 <p id="artistaAlbum'.$albumsL.'" style="display: none;">'.$artistName.'</p>

@@ -69,6 +69,7 @@
                                 <p id="name'.$cancionesL.'">'.$name.'</p>
                                 <p id="artist'.$cancionesL.'">'.$artistName.'</p>
                                 <p id="dur'.$cancionesL.'">'.$duracion.'</p>
+                                <p style="display: none;" id="artistaIdSong'.$cancionesL.'">'.$artistId.'</p>
                                 <p id="albumSong'.$cancionesL.'">'.$albumName.'</p>
                                 <p id="artistaId">'.$artistId.'</p>
                             </div>
