@@ -1,11 +1,16 @@
 <?php
-    session_start();
     include('conexion.php');
-    if (isset($_SESSION['userId'])) {
-        $userId = $_SESSION['userId'];
-    }else{
-        session_abort();
+    if(session_status() !== PHP_SESSION_ACTIVE) {
+        if (session_start()) {
+            if (isset($_SESSION['userId'])) {
+                $userId = $_SESSION['userId'];
+            }else{
+                session_abort();
+            }
+
+        }
     }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,5 +20,12 @@
     <title>aaa</title>
 </head>
 <body>
+    <?php
+        if (isset($_SESSION['userId'])) {
+            echo '
+                <div id="homeSec" ></div>
+            ';
+        }
+    ?>
 </body>
 </html>

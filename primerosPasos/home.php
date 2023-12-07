@@ -242,7 +242,7 @@ if(isset($_GET["salir"])) {
         <p class="option" id="next">Reproducir a continuacion</li>
         <p class="option" id="row">agregar a la fila</p>
         <p class="option" id="initRadio">Iniciar Radio</p>
-        <!-- <p class="option" id="addRadio">Agregar Radio</p> -->
+        <p class="option" id="addRadio">Agregar Radio</p>
         <p class="option" id="like">Me Gusta</p>
         <p class="option" id="emotion">Emocion ></p>
         <!-- <p class="option" id="addLibrary">Agregar a Biblioteca</p> -->
@@ -283,7 +283,11 @@ if(isset($_GET["salir"])) {
         </aside>
     <div style="height: 4%; width:100%" ></div>
 
-        <div class="cont" id="containerSec"></div>        
+        <div class="cont" id="containerSec">
+            <?php
+                include('./Sections/Screens/home2.php')
+            ?>
+        </div>        
     </div>    
     <div class="reproductor">
         <?php

@@ -40,13 +40,14 @@ window.addEventListener('keydown', function (event) {
         case ` `:
           // event.preventDefault();
           window.scrollBy(0, 0);
-          if (musica.paused) {
-            if (document.activeElement.id == 'busquedaText' || document.activeElement.id == 'namePlaylist' || document.activeElement.id == 'descPlaylist') {
+        if (document.activeElement.id == 'busquedaText' || document.activeElement.id == 'namePlaylist' || document.activeElement.id == 'descPlaylist') {
 
-            }else{
-              reproducir()
-            }
           }else{
+          // if (musica.paused) {
+
+          //   }else{
+          //     reproducir()
+          //   }
             reproducir()
           }
         break;
@@ -66,6 +67,9 @@ async function reaccionar() {
   let response = await fetch(`../primerosPasos/Functions/reaction.php?emocionId=${emocion.value}&songId=${canciones[cancionActual].idBD}`, {
     method: 'GET'
   });
+}
+function disorderList(array) {
+  return array.sort(() => Math.random() - 0.5);
 }
 function reproducir () {
   let boton = document.getElementById('play-pause')
@@ -166,12 +170,13 @@ async function nuevaCancion(url, imagen, nombre, artista, duracion, album, idBD)
   };
   canciones.push(cancion);
   cancionActual = canciones.length-1
-  
   musica.src = canciones[cancionActual].url
   musica.volume=1;
-  musica.load()
+  await musica.load()
   reproducir()
   actualizar()
+  await interaccion('Cancion', canciones[cancionActual].nombre, canciones[cancionActual].idBD)
+
 }
 async function siguienteCancion(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
@@ -191,6 +196,7 @@ async function reproducirSiguienteCancion() {
   cancionActual++;
   if (cancionActual > (canciones.length-1)) {
     cancionActual = 0; // Reinicia al comienzo de la lista si llega al final
+    canciones = disorderList(canciones)
   }else{
   }
   musica.src=canciones[cancionActual].url
@@ -215,7 +221,7 @@ function actualizar() {
     ]
   });
 }
-function reproducirAnteriorCancion() {
+async function reproducirAnteriorCancion() {
   if (musica.currentTime<5) {
     if (cancionActual>0) {
     cancionActual= cancionActual-1;
@@ -228,11 +234,13 @@ function reproducirAnteriorCancion() {
     musica.load();
     reproducir()
     actualizar()
+  await interaccion('Cancion', canciones[cancionActual].nombre, canciones[cancionActual].idBD)
+
   }
 }
 musica.addEventListener('ended', async function() {
   await reproducirSiguienteCancion();
-  await interaccion('Cancion', canciones[cancionActual].nombre, canciones[cancionActual].idBD)
+  // await interaccion('Cancion', canciones[cancionActual].nombre, canciones[cancionActual].idBD)
   actualizar()
 });
 musica.ontimeupdate = function() {
@@ -321,6 +329,7 @@ musica.ontimeupdate = function() {
   minutos = Math.floor(minutos)
   time.innerHTML = minutos
   seconds = musica.duration%60
+  seconds = Math.floor(seconds)
   if (minutos.toString().length == 1) {
     minutos = "0"+time.innerHTML
   }else{
@@ -331,7 +340,7 @@ musica.ontimeupdate = function() {
   }else{
     seconds = seconds
   }
-  minutos = `${minutos}:${Math.floor(seconds)}`
+  minutos = `${minutos}:${seconds}`
   time.innerHTML = minutos
   if (clickVolumen == true) {
     musica.volume= (volumen.value/100)

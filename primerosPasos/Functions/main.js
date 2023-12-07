@@ -182,19 +182,17 @@ async function consultBd(url) {
   resultsBd.innerHTML = data
 }
 async function postBd(url, data) {
-const params = new URLSearchParams();
-for (const key in data) {
-    params.append(key, data[key]);
-}
-
-const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: params
-});
-
+  const params = new URLSearchParams();
+  for (const key in data) {
+      params.append(key, data[key]);
+  }
+  const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: params
+  });
   resultsBd.innerHTML = await response.text()
 }
 async function getToken() {
@@ -246,178 +244,25 @@ function padTime(time) {
   let paddedParts = parts.map(part => part.padStart(2, '0'));
   return paddedParts.join(':');
 }
-async function addRow(cancion, artista, duracion, imagen, album, idBD) {
-  //animacion de carga aca
-  let cont = 0
-  let resultado
-  let repite
-  // Clave de API de YouTube
-  const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
-  // Construye la consulta de búsqueda
-  let consulta = `${cancion} ${artista} lyric`;
-  // Codifica la consulta para usarla en una URL
-  consulta = encodeURIComponent(consulta);
-  // Construye la URL de la solicitud a la API de búsqueda de YouTube
-  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
-  // Realiza la solicitud a la API de búsqueda de YouTube
-  let respuesta = await fetch(url);
-  let datos = await respuesta.json();    
-  // Verifica si se encontraron resultados
-  if (datos.items.length > 0) {
-      // Devuelve el ID del primer video encontrado
-        let intervalo = setInterval(async () => {
-        const url = `https://youtube-mp36.p.rapidapi.com/dl?id=${datos.items[0].id.videoId}`;
-        const options = {
-          method: 'GET',
-          headers: {
-            'X-RapidAPI-Key': '0da5fe62c2msh1ee3f8c081ec628p1b74d6jsnd14d82b9f8e0',
-            'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
-          }
-        };
-        try {
-          const response = await fetch(url, options);
-          const result = await response.json();
-          console.log(result);
-          resultado = result;
-        } catch (error) {
-          console.error(error);
-        }
-        if (resultado.status == 'ok') {
-        } else {
-        }
-        if (resultado.status == 'ok') {
-          repite = false;
-          // audioPlayer.volume=0;
-          // audioPlayer.load()
-          // audioPlayer.src = resultado.link
-          // audioPlayer.load()
-          // audioPlayer.volume=1;
-          await agregarALaFila(resultado.link, imagen, cancion, artista, duracion, album, idBD);
-          // duration = musica.duration
-          // if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
-          //   duration = resultado.duration
-          // }else{
-          //   setInterval(() => {
-          //   duration = musica.duration
-          //   }, 200);
-          // }
-          // duration = duracion
-          // await interaccion('Cancion',cancion)
-          clearInterval(intervalo4);
-          actualizar()
-          let Breaccion = document.getElementById('reaccion')
-          Breaccion.addEventListener('click',async function name() {
-            let emociones = document.getElementById('emociones')
-            emociones.style.display = 'block'
-          })
-          }else{
-            console.log('esperando cancion')
-            repite == true
-          }
-          if (cont>=5) {
-            console.log(`siguiente api`)
-            let link = await apiSecondOption(datos.items[0].id.videoId)
-            if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
-              duration = resultado.duration
-            }else{
-              setInterval(() => {
-              duration = musica.duration
-              }, 200);
-            }
-            await agregarALaFila(link, imagen, cancion, artista, duracion, album, idBD);
-            repite = false;
-          }
-          cont += 1
-        }, 10000);
-    setInterval(() => {
-      if (repite == false) {
-        clearInterval(intervalo)
-      }
-    }, 1000);
-      // No se encontraron resultados
-      null;
-    } else {
-      console.log('la cancion no se pudo cargar')
+async function getSongFromYTID(id) {
+  const url = `https://youtube-mp36.p.rapidapi.com/dl?id=${id}`;
+  const options = {
+    method: 'GET',
+    headers: {
+      // 'X-RapidAPI-Key': '0da5fe62c2msh1ee3f8c081ec628p1b74d6jsnd14d82b9f8e0',
+      'X-RapidAPI-Key': '6c4b6fb945mshda38336cdc12003p1049b1jsn94562655b31d',
+      'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
+    }
+  };
+  try {
+    const response = await fetch(url, options);
+    const result = await response.json();
+    // console.log(result);
+    return result;
+  } catch (error) {
+    console.error(error);
   }
-}
-async function cancionNext(cancion, artista, duracion, imagen, album, idBD) {//animacion de carga aca
-  let cont = 0
-  let resultado
-  let repite
-  
-  // Clave de API de YouTube
-  const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
-  // Construye la consulta de búsqueda
-  let consulta = `${cancion} ${artista} lyric`;
-  // Codifica la consulta para usarla en una URL
-  consulta = encodeURIComponent(consulta);
-  // Construye la URL de la solicitud a la API de búsqueda de YouTube
-  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
-  // Realiza la solicitud a la API de búsqueda de YouTube
-  let respuesta = await fetch(url);
-  let datos = await respuesta.json();    
-  // Verifica si se encontraron resultados
-  if (datos.items.length > 0) {
-      // Devuelve el ID del primer video encontrado
-        const intervalo = setInterval(async () => {
-        const url = `https://youtube-mp36.p.rapidapi.com/dl?id=${datos.items[0].id.videoId}`;
-        const options = {
-          method: 'GET',
-          headers: {
-            'X-RapidAPI-Key': '0da5fe62c2msh1ee3f8c081ec628p1b74d6jsnd14d82b9f8e0',
-            'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
-          }
-        };
-        try {
-          const response = await fetch(url, options);
-          const result = await response.json();
-          console.log(result);
-          resultado = result;
-        } catch (error) {
-          console.error(error);
-        }
-        if (resultado.status == 'ok') {
-          repite = false;
-        } else {
-          repite = true;
-          resultado.status = false
-        }
-        if (resultado.status == 'ok') {
-          await siguienteCancion(resultado.link, imagen, cancion, artista, duracion, album, idBD);
-          // duration = duracion
-          clearInterval(intervalo4);
-          actualizar()
 
-          }else{
-            console.log('esperando cancion')
-            repite == true
-          }
-              if (cont>=5) {
-                console.log(`siguiente api`)
-                let link = await apiSecondOption(datos.items[0].id.videoId)
-                if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
-                  duration = resultado.duration
-                }else{
-                  setInterval(() => {
-                  duration = musica.duration
-                  }, 200);
-                }
-                await siguienteCancion(link, imagen, cancion, artista, duracion, album, idBD);
-    
-                repite = false;
-              }
-                cont += 1
-        }, 10000);
-    setInterval(() => {
-      if (repite == false) {
-        clearInterval(intervalo)
-      }
-    }, 100);
-      // No se encontraron resultados
-      null;
-    } else {
-      console.log('la cancion no se pudo cargar')
-  }
 }
 async function apiSecondOption(id){
   const url = `https://youtube-mp3-download-highest-quality1.p.rapidapi.com/ytmp3/ytmp3/custom/?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D${id}&quality=320`;
@@ -438,13 +283,113 @@ async function apiSecondOption(id){
     console.error(error);
   }
 }
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function addRow(cancion, artista, duracion, imagen, album, idBD) {
+  //animacion de carga aca
+  let cont = 0
+  let resultado
+  let repite = true
+  // Clave de API de YouTube
+  // const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
+  const apiKey = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
+
+  // Construye la consulta de búsqueda
+  let consulta = `${cancion} ${artista} lyric`;
+  // Codifica la consulta para usarla en una URL
+  consulta = encodeURIComponent(consulta);
+  // Construye la URL de la solicitud a la API de búsqueda de YouTube
+  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
+  // Realiza la solicitud a la API de búsqueda de YouTube
+  let respuesta = await fetch(url);
+  let datos = await respuesta.json();    
+  // Verifica si se encontraron resultados
+  if (datos.items.length > 0) {
+      // Devuelve el ID del primer video encontrado
+      while (repite == true) {
+        let resultado = await getSongFromYTID(datos.items[0].id.videoId)
+          if (resultado.status == 'ok') {
+            repite = false;
+            await agregarALaFila(resultado.link, imagen, cancion, artista, duracion, album, idBD);
+            clearInterval(intervalo4);
+            actualizar()
+          } else {
+            console.log('esperando cancion')
+            repite == true
+          }
+          if (cont>=5) {
+            console.log(`siguiente api`);
+            repite = false;
+            let link = await apiSecondOption(datos.items[0].id.videoId)
+            await agregarALaFila(link, imagen, cancion, artista, duracion, album, idBD)
+          }
+          cont += 1
+          await delay(10000);  // Espera 10000ms
+
+      }
+    } else {
+      // No se encontraron resultados
+      console.log('la cancion no se pudo cargar')
+  }
+}
+async function cancionNext(cancion, artista, duracion, imagen, album, idBD) {//animacion de carga aca
+  let cont = 0
+  let resultado
+  let repite = true
+  
+  // Clave de API de YouTube
+  // const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
+  const apiKey = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
+
+  // Construye la consulta de búsqueda
+  let consulta = `${cancion} ${artista} lyric`;
+  // Codifica la consulta para usarla en una URL
+  consulta = encodeURIComponent(consulta);
+  // Construye la URL de la solicitud a la API de búsqueda de YouTube
+  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
+  // Realiza la solicitud a la API de búsqueda de YouTube
+  let respuesta = await fetch(url);
+  let datos = await respuesta.json();    
+  // Verifica si se encontraron resultados
+  if (datos.items.length > 0) {
+      // Devuelve el ID del primer video encontrado
+      while (repite == true) {
+        const resultado = await getSongFromYTID(datos.items[0].id.videoId)
+        if (resultado.status == 'ok') {
+          repite = false;
+          await siguienteCancion(resultado.link, imagen, cancion, artista, duracion, album, idBD);
+          clearInterval(intervalo4);
+          actualizar()
+        } else {
+            console.log('esperando cancion')
+            repite == true
+        }
+          if (cont>=5 || resultado.status == 'fail') {
+            console.log(`siguiente api`)
+            repite = false;
+            let link = await apiSecondOption(datos.items[0].id.videoId)
+            await nuevaCancion(link, imagen, cancion, artista, duracion, album, idBD);
+            // await interaccion('Cancion', cancion, idBD) 
+            clearInterval(intervalo4);
+          }
+          cont += 1
+          await delay(10000);  // Espera 10000ms
+      }
+      null;
+    } else {
+      // No se encontraron resultados
+      console.log('la cancion no se pudo cargar')
+  }
+}
 async function cancionNew(Cancion, artista, cancionDur, imagen, album, idBD) {
     //animacion de carga aca
     let cont = 0
     let resultado
     let repite = true
     // Clave de API de YouTube
-    const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
+    // const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
+    const apiKey = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
     // Construye la consulta de búsqueda
     let consulta = `${Cancion} ${artista} lyric`;
     // Codifica la consulta para usarla en una URL
@@ -456,82 +401,32 @@ async function cancionNew(Cancion, artista, cancionDur, imagen, album, idBD) {
     let datos = await respuesta.json();    
     // Verifica si se encontraron resultados
     if (datos.items.length > 0) {
-        // Devuelve el ID del primer video encontrado
-          const intervalo = setInterval(async () => {
-          const url = `https://youtube-mp36.p.rapidapi.com/dl?id=${datos.items[0].id.videoId}`;
-          const options = {
-            method: 'GET',
-            headers: {
-              'X-RapidAPI-Key': '0da5fe62c2msh1ee3f8c081ec628p1b74d6jsnd14d82b9f8e0',
-              'X-RapidAPI-Host': 'youtube-mp36.p.rapidapi.com'
-            }
-          };
-          try {
-            const response = await fetch(url, options);
-            const result = await response.json();
-            console.log(result);
-            resultado = result;
-          } catch (error) {
-            console.error(error);
-          }
-          if (resultado.status == 'ok') {
-            repite = false;
-          } else {
-            repite = true;
-            resultado.status = false
-          }
-          if (resultado.status == 'ok') {
-            audioPlayer.volume=0;
-            // audioPlayer.load()
-            // audioPlayer.src = resultado.link
-            // audioPlayer.load()
-            // audioPlayer.volume=1;
-            await nuevaCancion(resultado.link, imagen, Cancion, artista, cancionDur, album, idBD);
-            duration = musica.duration
-            if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
-              duration = resultado.duration
-            }else{
-              setInterval(() => {
-              duration = musica.duration
-              }, 200);
-            }
-            duration = cancionDur
-            await interaccion('Cancion', Cancion, idBD) 
-            clearInterval(intervalo4);
-            actualizar()
-            // await radioSpotify(artista, Cancion, )
-            let Breaccion = document.getElementById('reaccionB')
-            Breaccion.addEventListener('click',async function name() {
-              // let emociones = document.getElementById('emociones')
-              // emociones.style.display = 'block'
-            })
-            }else{
-              console.log('esperando cancion')
-              repite == true
-            }
-                if (cont>=3) {
-                  console.log(`siguiente api`)
-                  let link = await apiSecondOption(datos.items[0].id.videoId)
-                  await nuevaCancion(link, imagen, Cancion, artista, cancionDur, album, idBD);
-                  await interaccion('Cancion', Cancion, idBD) 
-                  clearInterval(intervalo4);
-
-                  if (duration == 'NaN' || duration == NaN || duration == 'infinity'|| duration == 'infinity') {
-                    duration = resultado.duration
-                  }else{
-                    setInterval(() => {
-                    duration = musica.duration
-                    }, 200);
-                  }
-                  repite = false;
-                }
-                  cont += 1
-          }, 10000);
-      setInterval(async () => {
-        if (repite == false) {
-          clearInterval(intervalo)
+      // Devuelve el ID del primer video encontrado
+    
+      while (repite == true) {
+        const resultado = await getSongFromYTID(datos.items[0].id.videoId)
+        console.log(resultado)
+        if (resultado.status == 'ok') {
+          repite = false;
+          await nuevaCancion(resultado.link, imagen, Cancion, artista, cancionDur, album, idBD);
+          // await interaccion('Cancion', Cancion, idBD) 
+          clearInterval(intervalo4);
+          actualizar()
+        }else{
+          console.log('esperando cancion')
+          repite = true
         }
-      }, 1000);
+        if (cont>=3|| resultado.status == 'fail') {
+          console.log(`siguiente api`)
+          repite = false;
+          let link = await apiSecondOption(datos.items[0].id.videoId)
+          await nuevaCancion(link, imagen, Cancion, artista, cancionDur, album, idBD);
+          // await interaccion('Cancion', Cancion, idBD) 
+          clearInterval(intervalo4);
+        }
+        cont += 1
+            await delay(10000);  // Espera 1000ms
+        }
       } else {
         // No se encontraron resultados en yt
     }
@@ -754,6 +649,8 @@ async function contextMenuSecondOption(cont, event){
 }
 async function openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaSongID, idBD) {
   contextMenuPressed = true
+  let index =0
+  let data
   let options = document.querySelectorAll('.option')
   // contextMenu.style.width= '20%';
   // contextMenu.style.backgroundColor = "green";
@@ -780,14 +677,38 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
 
         break;
         case "initRadio":
-          await consultBd('./Functions/getEmociones_usuarios.php')
-          let results = getResultsBd()
-          console.log(results)
+          // await consultBd('./Functions/getEmociones_usuarios.php')
+          // let results = getResultsBd()
+          // console.log(results)
+          await cancionNew(cancionName, artista, cancionDur, imagen, album, idBD)
+          data = await getSongRecommendationsLFM(artista, cancionName);
+          console.log(data.similartracks.track);
+          if (data.similartracks.track.length>0) {
+            // let elements = document.getElementById(`canciones${cancion[0].name}`);
+            await Promise.all(data.similartracks.track.map(async function(song) {
+              if (index<=3) {
+                index++;
+                let data5 = await getSong(song.name, ' ', song.artist.name);
+                await cancionNext(data5.name, data5.artists[0].name, data5.duration_ms, data5.album.images[0].url, data5.album.name, data5.id);
+              }
+            }));
+          }
           contextMenu.style.display = 'none'
-          // await cancionNew(cancionName, artista, cancionDur, imagen, album, idBD)
           // contextMenu.style.display = 'none'
           break;
         case "addRadio":
+          data = await getSongRecommendationsLFM(artista, cancionName);
+          console.log(data.similartracks.track);
+          if (data.similartracks.track.length>0) {
+            // let elements = document.getElementById(`canciones${cancion[0].name}`);
+            await Promise.all(data.similartracks.track.map(async function(song) {
+              if (index<=3) {
+                index++;
+                let data5 = await getSong(song.name, ' ', song.artist.name);
+                await addRow(data5.name, data5.artists[0].name, data5.duration_ms, data5.album.images[0].url, data5.album.name, data5.id);
+              }
+            }));
+          }
           //recibir recomendacion
           // await radioSpotify(artista, "", cancionName)
           // artistaIdSong
@@ -847,19 +768,10 @@ async function cancionesPreview() {
   }
   let album = document.getElementById('albumSong'+index).innerHTML
   let artistaIdSong = document.getElementById('artistaIdSong'+index)
-  // if (artistaIdSong === null) {
-  // }else{
-  //   artistaIdSong = artistaIdSong.innerHTML 
-  // }
-  // await preview.load()
   let cancion = document.getElementById('cancion'+index)
     cancion.addEventListener('click', async function() {
-      // preview.src = cancion.getAttribute('value')
       clearInterval(intervalo);
       clearInterval(intervalo2);
-      // audioPlayer.load()
-      // preview.volume =0
-      // preview.play()
       intervalo4 = setInterval(()=> {
         
         if ((preview.volume+0.001)>=0.6) {
@@ -1190,7 +1102,6 @@ async function getSongRecommendationsLFM(artist, track) {
   const data = await response.json();
   return data;
 }
-
 async function searchSong(busqueda) {
     const url = `https://api.spotify.com/v1/search?q=${busqueda}&type=track&include_external=audio`;
     const headers = {
@@ -1290,8 +1201,9 @@ async function interaccion(type, nombre, idSpotify) {
     method: 'GET'
   });
 }
-async function addRow(params) {
-  contenido.innerHTML +=`
+async function addRowFromSong(params) {
+  let homeSec = document.getElementById('homeSec')
+  homeSec.innerHTML +=`
   <div class="row">
       <h2>Porque escuchaste ${params}</h2>
       <div id="canciones${params}" class="elementos">
@@ -1301,32 +1213,35 @@ async function addRow(params) {
 }
 async function goToHome(){
   await cargarContenido('../primerosPasos/Sections/Screens/home2.php');
+  let homeSec = document.getElementById('homeSec')
   let songsLenght = 0;
-  await consultBd('./Functions/getHistory.php');
+  await consultBd('./Functions/getLibrary.php');
   let results = getResultsBd();
-  // console.log(results);
-  for (let index = 0; index < 3; index++) {
+  console.log(results);
+  for (let index = 0; index < 10; index++) {
     const element = results[index];
     const data = {
         songId: element.idspotify
     };
+      try {
     await postBd(`./Functions/getSong-IdSp.php`, data);
     let cancion = getResultsBd();
-    console.log(cancion);
+    // console.log(cancion);
     if (cancion.length > 0) { 
       const data2 = {
           artistId: cancion[0].artistid
       };
-      try {
       await postBd(`./Functions/getArtist-IdSp.php`, data2);
       let artista = getResultsBd();
       // console.log(artista);
+      if (artista.length>0) {
       let data4 = await getSongRecommendationsLFM(artista[0].name, cancion[0].name);
       console.log(data4.similartracks.track);
       if (data4.similartracks.track.length>0) {
-        addRow(element.name)
-        let elements = document.getElementById(`canciones${cancion[0].name}`);  await Promise.all(data4.similartracks.track.map(async function(song) {
-            let data5 = await getSong(cancion[0].name, ' ', song.artist.name);
+        addRowFromSong(element.name)
+        let elements = document.getElementById(`canciones${cancion[0].name}`);
+        await Promise.all(data4.similartracks.track.map(async function(song) {
+            let data5 = await getSong(song.name, ' ', song.artist.name);
             console.log(data5);
             elements.innerHTML+=`
                 <div class="elemento" id="cancion${songsLenght+1}" value="${data5.preview_url}">
@@ -1341,18 +1256,18 @@ async function goToHome(){
                     </div>
                 </div> 
             `;
-            console.log('insertado');
             songsLenght++;
         }));
 
         
       }
+      }
+    }
       } catch (error) {
         console.log(error)
       }
-    }
   }
-  contenido.innerHTML+=`
+  homeSec.innerHTML+=`
   <p id="canciones.length" style="display:none;" value="${songsLenght}">${songsLenght}</p>
   `;
   await cancionesPreview();
@@ -1440,13 +1355,6 @@ async function buscar() {
       // event.preventDefault();
         await comun()
     }
-    if (event.key == ' '){
-      // busqueda.value += ' '
-      // event.preventDefault();
-      // setTimeout(() => {
-      //   reproducir()
-      // }, 1);
-    }
     })
   async function comun() {
     console.log('buscando')
@@ -1488,3 +1396,5 @@ setInterval(() => {
     }
   }
 }, 1000);
+
+// goToHome() //descomentar para que se carguen recomendaciones de home apenas se abre la pagina
