@@ -2,6 +2,6 @@
 $server="localhost";
 $user= "root";
 $password="";
-$db="mudsic_casioficial";
+$db="mudsic";
 $conexion=mysqli_connect($server, $user, $password, $db)
 ?>
