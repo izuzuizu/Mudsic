@@ -24,7 +24,6 @@
 </head>
 <body>
     <?php
-    print_r($artistas);
         echo 'nombre: '.$name.',  desc:'.$desc.'';  
     ?>
 </body>

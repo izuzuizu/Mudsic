@@ -23,18 +23,22 @@ window.addEventListener('keydown', function (event) {
     // El parámetro del evento es del tipo KeyboardEvent
     switch (event.key) {
       case `ArrowLeft`:
+          event.preventDefault();
           retroceder()
         break;
     
         case `ArrowRight`:
+          event.preventDefault();
           avanzar()
         break;
         
         case `ArrowUp`:
+          event.preventDefault();
           volumenAlto()
         break;
     
         case `ArrowDown`:
+          event.preventDefault();
           volumenBajo()
         break;
         case ` `:
@@ -354,6 +358,8 @@ musica.ontimeupdate = function() {
 };
     const emojisPositive = ['👍', '😍', '👍', '😈', '🤣', '😄', '🥳', '😴', '👹', '🚀'];
     const emojisNegative = ['👎', '🤮', '💔', '😭', '😡', '😭'];
+    var config = document.getElementById("reactionsCont");
+    var checkbox = document.getElementById("reactions");
 
     // Define el estado actual
     let currentState = 'positive'; // Puede ser 'positive' o 'negative'
@@ -392,9 +398,17 @@ musica.ontimeupdate = function() {
         emojiListContainer.innerHTML = emojiListHTML;
     }
     function abrirReacciones() {
-        var checkbox = document.getElementById("reactions");
-        checkbox.checked = !checkbox.checked;
-        openModal();
+      reactActualSong = true
+      checkbox.checked = !checkbox.checked;
+      config.style.left = '71%';
+      config.style.top = '59%';
+      openModal();
+    }
+    function moveReacciones(event) {
+      config.style.left = event.pageX + 'px';
+      config.style.top = event.pageY + 'px';
+      checkbox.checked = !checkbox.checked;
+      openModal();
     }
     // Ejemplo de cómo usar la función en un botón o evento
     const toggleButton = document.getElementById('toggleButton');
@@ -411,7 +425,6 @@ musica.ontimeupdate = function() {
 
         // Si el checkbox está marcado, establece la opacidad en 1, de lo contrario, en 0.5
         config.style.display = checkbox.checked ? "flex" : "none";
-         
     }
     document.addEventListener('click', function(event) {
         if (event.target === checkbox) {
@@ -424,12 +437,56 @@ musica.ontimeupdate = function() {
     document.addEventListener('click', function(event) {
       console.log(event.target)
         if (event.target === botonReaccion) {
+          reactActualSong= true
             document.getElementById("reactionsCont").style.display = 'none'
         }else{
             document.getElementById("reactionsCont").style.display = 'none'
         }
     });  
-    function handleItemClick(item) {
-        console.log(item);
+    async function handleItemClick(item) {
+      let emotionId
+        await consultBd('./Functions/getEmotions.php');
+        let results = getResultsBd();
+        results.forEach(async (emotion)=>{
+          if (emotion.emoji == item) {
+            console.log(item)
+            emotionId = emotion.emotionid
+            if (reactActualSong) {
+              console.log(canciones[cancionActual])
+              const data = {
+                  songId: canciones[cancionActual].idBD
+              };
+              await postBd(`./Functions/getSong-IdSp.php`, data);
+              let results = getResultsBd();
+              results.forEach(async (song)=>{
+                console.log(song.idspotify)
+                const data = {
+                  songId: song.idspotify,
+                  emotionId: emotionId
+                };
+                await postBd(`./Functions/setEmociones_usuarios.php`, data);
+                let results = getResultsBd();
+                console.log(results)
+              })
+            }else{
+              const data = {
+                songId: reactSong.songId
+              };
+              await postBd(`./Functions/getSong-IdSp.php`, data);
+              let results = getResultsBd();
+              results.forEach(async (song)=>{
+                console.log(song)
+                const data = {
+                  songId: song.idbd,
+                  emotionId: emotionId
+                };
+                await postBd(`./Functions/setEmociones_usuarios.php`, data);
+                let results = getResultsBd();
+                console.log(results)
+                abrirReacciones()
+            })
+            }
+          }
+        })
         openModal();
   }

@@ -6,7 +6,8 @@
     include("conexion.php");
     if (isset($userId)) {
 
-        $sql="SELECT * FROM biblioteca WHERE usuarios_id = '$userId' ORDER BY biblioteca.repeticion DESC";
+        // $sql="SELECT * FROM biblioteca WHERE usuarios_id = '$userId' ORDER BY biblioteca.repeticion DESC";
+        $sql="SELECT * FROM biblioteca WHERE usuarios_id = '$userId' ORDER BY biblioteca.id DESC";
         $resulta = mysqli_query($conexion, $sql);
 ?>
 <body>

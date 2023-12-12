@@ -1,5 +1,6 @@
 let audioPlayer = document.getElementById('actual');
 const contenido = document.getElementById('containerSec');
+let hoverContext = document.getElementById('hoverContext')
 let cancionesData
 let accessToken
 let artistaId = ''
@@ -155,8 +156,81 @@ let actualPlaylistId
 let contextMenu = document.getElementById('contextMenu')
 let contextMenu2 = document.getElementById('contextMenu2')
 let resultsBd = document.getElementById('resultsBd')
+let nextButton = document.getElementById('avanzar')
+let prevButton = document.getElementById('retroceder')
+let reactActualSong = true
+let reactSong = {}
 
 
+
+// function onBackButtonEvent(e){
+//   e.preventDefault();
+//   console.log('onBackButtonEvent')
+//   // var currentLocation = window.location.pathname;
+//   // history.push(`${currentLocation}/mypage/new`);
+// };
+const onBackButtonEvent = (e) => {
+  console.log('onBackButtonEvent')
+  e.preventDefault();
+  var currentLocation = window.location.pathname;
+  history.push(`${currentLocation}/mypage/new`);
+};
+nextButton.onmouseenter = function(e) {
+  if (cancionActual>0 && cancionActual < canciones.length-1) {
+    hoverContext.innerHTML =`
+    <p class="hoverContext" id="nextSong">${canciones[cancionActual+1].nombre}</p>
+    <p class="hoverContext" id="nextSong">${canciones[cancionActual+1].artista}</p>
+    `
+    hoverContext.style.display = 'block';
+    hoverContext.style.left = e.pageX + 'px';
+    hoverContext.style.top = (e.pageY-20) + 'px';
+    hoverContext.style.zIndex = 1500
+    hoverContext.style.position = 'absolute'
+
+  }
+};
+nextButton.onmouseleave = function(e) {
+  hoverContext.style.display = 'none';
+};
+prevButton.onmouseenter = function(e) {
+  if (cancionActual>0) {
+    hoverContext.innerHTML =`
+    <p class="hoverContext" id="nextSong">${canciones[cancionActual-1].nombre}</p>
+    <p class="hoverContext" id="nextSong">${canciones[cancionActual-1].artista}</p>
+    `
+    hoverContext.style.display = 'block';
+    hoverContext.style.left = e.pageX + 'px';
+    hoverContext.style.top = (e.pageY-20)  + 'px';
+    hoverContext.style.zIndex = 1500
+    hoverContext.style.position = 'absolute'
+  }
+};
+prevButton.onmouseleave = function(e) {
+  hoverContext.style.display = 'none';
+};
+
+// // Usar window.history.pushState para agregar una entrada al historial del navegador
+// window.history.pushState({page: "otraPagina"}, "otraPagina", "/otraPagina.html");
+
+// // Usar window.history.replaceState para reemplazar la entrada actual del historial del navegador
+// window.history.replaceState({page: "paginaReemplazada"}, "paginaReemplazada", "/paginaReemplazada.html");
+
+// Usar el evento popstate para detectar cuando el usuario navega hacia atrás o hacia adelante
+window.onpopstate = function(event) {
+    console.log("location: " + document.location + ", state: " + JSON.stringify(event.state));
+};
+
+window.addEventListener('popstate', (e)=>{
+  console.log('onBackButtonEvent')
+  onBackButtonEvent(e)
+});
+
+
+// window.addEventListener("popstate", (event)=>{
+//   event.preventDefault();
+//   console.log(event)
+//   onBackButtonEvent(event)
+// });
 
 function getAttributes(elementId) {
   var element = document.getElementById(elementId);
@@ -513,8 +587,29 @@ async function moveList() {
     })
   }
 }
+
+let loadingDiv = document.createElement('div');
+loadingDiv.id = 'loadingDiv';
+loadingDiv.style.display = 'none';
+loadingDiv.innerHTML = 'Cargando...';
+document.body.appendChild(loadingDiv);
+
+// Mostrar la animación de "cargando"
+function showLoading() {
+  console.log('navegando')
+  document.getElementById('loadingDiv').style.display = 'block';
+}
+
+// Ocultar la animación de "cargando"
+function hideLoading() {
+  console.log('screen cargada')
+  document.getElementById('loadingDiv').style.display = 'none';
+}
+
 async function cargarContenido(url) {
     // Agregar la URL al historial
+    // Crear un elemento div para la animación de "cargando"
+    showLoading()
     history.push(url);
     async function getData(url) {
       const response = await fetch(url);
@@ -523,8 +618,9 @@ async function cargarContenido(url) {
       return data;
     }
     
-    await getData(url).then(data => {
+    await getData(url).then(async data => {
         contenido.innerHTML = data;
+        await hideLoading()
     }); 
 }
 async function getInfo(artist, track) {
@@ -643,33 +739,30 @@ async function radio(artist, track, album) {
           .catch(error => console.error(error));
 }
 async function contextMenuSecondOption(cont, event){
-  contextMenu.style.left = event.pageX + 'px';
-  contextMenu.style.top = event.pageY + 'px';
+  contextMenu2.style.left = event.pageX + 'px';
+  contextMenu2.style.top = event.pageY + 'px';
+  contextMenu2.style.display = 'block';
   contextMenu2.innerHTML = cont
 }
-async function openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaSongID, idBD) {
+window.onpopstate = function(event) {
+  event.preventDefault()
+  console.log(event)
+  // console.log(`location: ${document.location}, state: ${JSON.stringify(event.state)}`);
+};
+async function openContextMenuSong(event, cancionName, artista, cancionDur, imagen, album, artistaSongID, idBD) {
   contextMenuPressed = true
   let index =0
   let data
   let options = document.querySelectorAll('.option')
-  // contextMenu.style.width= '20%';
-  // contextMenu.style.backgroundColor = "green";
   contextMenu.style.left = event.pageX + 'px';
   contextMenu.style.top = event.pageY + 'px';
   contextMenu.style.display = 'block';
   options.forEach(function(option) {
-    // option.addEventListener('mouseenter', async function () {
-    //   option.style.backgroundColor = "blue"
-    // })
-    // option.addEventListener('mouseleave', async function () {
-    //   option.style.backgroundColor = 'green'
-    // })
-    option.addEventListener('click',async function name(event) {
+    option.addEventListener('click',async function (event) {
       switch (option.id) {
         case "next":
           await cancionNext(cancionName, artista, cancionDur, imagen, album, idBD);
           contextMenu.style.display = 'none'
-
         break;
         case "row":
           await addRow(cancionName, artista, cancionDur, imagen, album, idBD);
@@ -720,6 +813,14 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
           await reaccionar()
           break;
         case "emotion":
+          reactActualSong = false
+          console.log(idBD)
+          reactSong= {
+            name: cancionName,
+            artistName: artista,
+            songId: idBD,
+          }
+          moveReacciones(event)
           break;
         case 'addLibrary':
           break;
@@ -732,8 +833,28 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
           await goToAlbum(artistaSongID)
           break;
         case 'addToPlaylist':
-          let cont = await fetch('./Functions/getPlaylistsContext.php')
-          await contextMenuSecondOption(cont, event)
+          await consultBd('./Functions/getPlaylists.php');
+          let playlists = getResultsBd();
+          // console.log(playlists);
+          let cont=0
+          let conte = ' '
+          playlists.forEach((playlist)=>{
+            console.log(playlist);
+            cont++
+            conte += `
+              <p class="option" id="playlist${cont}" idplaylist="${playlist.idplaylist}" >${playlist.name} // ${playlist.songlenght}</li>
+            `
+          })
+          await contextMenuSecondOption(conte, event)
+          for (let index = 1; index <= cont; index++) {
+            const element = document.getElementById(`playlist${cont}`)
+            element.addEventListener('click', async function (event) {
+              let idPlaylist = element.getAttribute(`idplaylist`)
+              console.log(idBD)
+              await goToPlaylist(`${idPlaylist}&addSong=${idBD}`)
+              contextMenu2.style.display = 'none'
+            })
+          }
           break;
         default:
           break;
@@ -743,10 +864,10 @@ async function openContextMenuSong(cancionName, artista, cancionDur, imagen, alb
 }
 window.addEventListener('click', function(event) {
   var esClickDentro = contextMenu.contains(event.target);
-  if (!esClickDentro) {
-      // Aquí va tu código para manejar cuando no se hace click en el div
-      contextMenu.style.display = 'none'
-  }
+  // if (!esClickDentro) {
+  //     // Aquí va tu código para manejar cuando no se hace click en el div
+  //     contextMenu.style.display = 'none'
+  // }
   if (contextMenu.style.display != 'none') {
     contextMenu.style.display = 'none'
   }
@@ -767,7 +888,7 @@ async function cancionesPreview() {
     imagen = imagen.src
   }
   let album = document.getElementById('albumSong'+index).innerHTML
-  let artistaIdSong = document.getElementById('artistaIdSong'+index)
+  let artistaIdSong = document.getElementById('artistaIdSong'+index).innerHTML
   let cancion = document.getElementById('cancion'+index)
     cancion.addEventListener('click', async function() {
       clearInterval(intervalo);
@@ -783,7 +904,8 @@ async function cancionesPreview() {
     })
     cancion.addEventListener('contextmenu', async function(event) {
       event.preventDefault();
-      await openContextMenuSong(cancionName, artista, cancionDur, imagen, album, artistaIdSong.innerHTML, idBD.innerHTML)
+      console.log(idBD.innerHTML)
+      await openContextMenuSong(event, cancionName, artista, cancionDur, imagen, album, artistaIdSong.innerHTML, idBD.innerHTML)
     });
     if (cancion.getAttribute('value') =='nulo') {
       cancion.addEventListener('mouseenter',function name() {
@@ -853,12 +975,9 @@ async function albumsPreview(album, i) {//con fallas
   console.log(album)
       let cantCancionesAlbum = document.getElementById('cantCancionesAlbum'+i)
       let songs = await getSongsFromAlbum(albumId);
-      console.log(songs)
       album.addEventListener('mouseenter', async function() {
       var aleatorio = Math.floor(Math.random() * (songs.length - 0) + 0);
-      console.log(aleatorio)
       let song = await getSong(nombreArtista, albumNombre, songs[aleatorio])
-      console.log(song)
         if (song.preview_url == null  ) {
           console.log('sin preview limk')
           var aleatorio = Math.floor(Math.random() * (cantCancionesAlbum.innerHTML - 0) + 0);
@@ -995,9 +1114,7 @@ async function updatePlaylist(name, desc, songs, playlistId) {
     body: data,
   })
   // console.log(await result.text())
-  await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${playlistId}`)
-  await moveList()
-  await cancionesPreview()
+  await goToPlaylist(playlistId)
 }
 async function createPlaylist() {
   // let data = {name: name, desc: desc};
@@ -1013,8 +1130,7 @@ async function createPlaylist() {
 async function deletePlaylist(playlistId) {
   // console.log(playlistId)
   await fetch(`../primerosPasos/Functions/deletePlaylist.php?playlistId=${playlistId}`)
-  await cargarContenido(`../primerosPasos/Sections/Screens/Playlists.php`)
-  await playlistsPreview()
+  await goToPlaylists()
 }
 async function playlistsPreview() {
   let playlistsL = document.getElementById('playlists.length')
@@ -1026,15 +1142,13 @@ async function playlistsPreview() {
       // console.log(playlist.getAttribute('value'))  
       // actualPlaylistId = playlist.getAttribute('value')
       await deletePlaylist(playlist.getAttribute('value'))
-      await moveList()
+      // await moveList()
       // await cancionesPreview()
     })
     playlist.addEventListener('click', async () => {
       // console.log(playlist.getAttribute('value'))  
       actualPlaylistId = playlist.getAttribute('value')
-      await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${actualPlaylistId}`)
-      await moveList()
-      await cancionesPreview()
+      goToPlaylist(actualPlaylistId)
     })
   }
       let butonPlaylist = document.getElementById('createPlaylist')
@@ -1046,21 +1160,21 @@ async function playlistsPreview() {
         }else{
           await createPlaylist(name.value, desc.value)
           // console.log(name)
-          await cargarContenido(`../primerosPasos/Sections/Screens/Playlists.php`)
+          await goToPlaylists()
         }
       })
   
 }
 async function getSongsFromAlbum(albumId) {
   await getToken()
-    const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
-      headers: {
-        'Authorization': `Bearer ${accessToken}`
-      }
-    });
-    const data = await response.json();
-    const songs = data.items.map(item => item.name);
-    return songs;
+  const response = await fetch(`https://api.spotify.com/v1/albums/${albumId}/tracks`, {
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    }
+  });
+  const data = await response.json();
+  const songs = data.items.map(item => item.name);
+  return songs;
 }
 async function getTrack(trackId) {
     const response = await fetch(`https://api.spotify.com/v1/tracks/${trackId}`, {
@@ -1170,8 +1284,7 @@ document.getElementById('Nemociones').addEventListener('click', async function(e
 // });
 document.getElementById('Nplaylists').addEventListener('click', async function(e) {
     e.preventDefault();
-    await cargarContenido('../primerosPasos/Sections/Screens/Playlists.php');
-    await playlistsPreview()
+    goToPlaylists()
 });
 document.getElementById('Nhistorial').addEventListener('click', async function(e) {
     e.preventDefault();
@@ -1212,18 +1325,24 @@ async function addRowFromSong(params) {
   `;
 }
 async function goToHome(){
+  let secLenght = 0
   await cargarContenido('../primerosPasos/Sections/Screens/home2.php');
   let homeSec = document.getElementById('homeSec')
   let songsLenght = 0;
   await consultBd('./Functions/getLibrary.php');
   let results = getResultsBd();
   console.log(results);
-  for (let index = 0; index < 10; index++) {
+  let index = 0
+  // for (let index = 0; index < 10; index++) {
+    while(secLenght<3){
     const element = results[index];
+
+    // await results.forEach(async (element)=>{
+  // await Promise.all(results.map(async function(element) {
+      try {
     const data = {
         songId: element.idspotify
     };
-      try {
     await postBd(`./Functions/getSong-IdSp.php`, data);
     let cancion = getResultsBd();
     // console.log(cancion);
@@ -1236,13 +1355,15 @@ async function goToHome(){
       // console.log(artista);
       if (artista.length>0) {
       let data4 = await getSongRecommendationsLFM(artista[0].name, cancion[0].name);
-      console.log(data4.similartracks.track);
-      if (data4.similartracks.track.length>0) {
-        addRowFromSong(element.name)
+      console.log(data4);
+      let recommended = data4.similartracks.track
+      if (recommended.length>0) {
+        await addRowFromSong(element.name)
+        secLenght++
         let elements = document.getElementById(`canciones${cancion[0].name}`);
-        await Promise.all(data4.similartracks.track.map(async function(song) {
+        await Promise.all(recommended.map(async function(song) {
             let data5 = await getSong(song.name, ' ', song.artist.name);
-            console.log(data5);
+            // console.log(data5);
             elements.innerHTML+=`
                 <div class="elemento" id="cancion${songsLenght+1}" value="${data5.preview_url}">
                     <img id="imgS${songsLenght+1}" src="${data5.album.images[0].url}" alt="">
@@ -1258,14 +1379,13 @@ async function goToHome(){
             `;
             songsLenght++;
         }));
-
-        
       }
       }
     }
       } catch (error) {
         console.log(error)
       }
+      index++
   }
   homeSec.innerHTML+=`
   <p id="canciones.length" style="display:none;" value="${songsLenght}">${songsLenght}</p>
@@ -1319,7 +1439,6 @@ async function goToArtista(artistaId) {
 
             </div> 
           `
-
         }
       }
       cancioness.innerHTML+=`
@@ -1340,6 +1459,16 @@ async function goToArtista(artistaId) {
       });
   }
 }
+async function goToPlaylists() {
+  await cargarContenido('../primerosPasos/Sections/Screens/Playlists.php');
+  await playlistsPreview()
+}
+async function goToPlaylist(id) {
+  console.log(id)
+  await cargarContenido(`../primerosPasos/Sections/Screens/Playlist.php?playlistId=${id}`)
+  await moveList()
+  await cancionesPreview()
+}
 async function buscar() {
   let Bbusqueda = document.getElementById('Bbuscador')
   if (!eventAdded) {
@@ -1359,11 +1488,11 @@ async function buscar() {
   async function comun() {
     console.log('buscando')
     await getToken()
-      resultados = await search(busqueda.value)
-      console.log(resultados)
+    resultados = await search(busqueda.value)
+    console.log(resultados)
     await cargarContenido(`../primerosPasos/Sections/Screens/searchScreen.php?busqueda=${busqueda.value}`);
     await cancionesPreview()
-        let cantArtistas = document.getElementById('artistas.length')
+      let cantArtistas = document.getElementById('artistas.length')
       for (let index = 1; index < cantArtistas.innerHTML; index++) {
         let artista = document.getElementById(`artista${index}`)
         artista.addEventListener('click',async function name(event) {
@@ -1382,7 +1511,6 @@ async function buscar() {
         album.addEventListener('click',async function name(event) {
           event.preventDefault();
           await goToAlbum(nombreAlbum.innerHTML, nombreArtista, album.getAttribute('value'))
-
         })
       }
   }

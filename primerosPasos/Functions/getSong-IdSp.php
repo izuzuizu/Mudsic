@@ -22,7 +22,7 @@
             $previewLink = $todo['previewUrl'];
             $idSpotify = $todo['idSpotify'];
                 echo'
-                    <p id="Result'.$i.'" id="'.$id.'" name="'.$name.'" duration="'.$duration.'"  albumId="'.$albumId.'" artistId="'.$artistId.'" previewLink="'.$previewLink.'" idSpotify="'.$idSpotify.'"></p>
+                    <p id="Result'.$i.'" idBd="'.$id.'" name="'.$name.'" duration="'.$duration.'"  albumId="'.$albumId.'" artistId="'.$artistId.'" previewLink="'.$previewLink.'" idSpotify="'.$idSpotify.'"></p>
                 ';
             $i++;
         }

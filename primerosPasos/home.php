@@ -198,7 +198,7 @@ if(isset($_GET["salir"])) {
         box-shadow: 0px 0px 5px 2px rgb(12 12 12 / 87%);
     }
 
-    #contextMenu{
+    #contextMenu, #contextMenu2{
         display: none; 
         position: absolute;
     z-index: 10000000000;
@@ -209,7 +209,7 @@ if(isset($_GET["salir"])) {
     color: white;
     box-shadow: 1px 1px 25px #0000008c;
     }
-    #contextMenu p{
+    #contextMenu p, #contextMenu2 p{
         padding: 3px 8px;
     height: 27px;
     width: 200px;
@@ -221,8 +221,11 @@ if(isset($_GET["salir"])) {
     justify-content: flex-start;
     align-items: center;
     }
-    #contextMenu p:hover{
+    #contextMenu p:hover, #contextMenu2 p:hover{
         background-color: #343434;
+    }
+    #hoverContext{
+        pointer-events: none;
     }
 </style>
 <!DOCTYPE html>
@@ -238,8 +241,19 @@ if(isset($_GET["salir"])) {
   </audio>
 </head>
 <body>
+    <div id="hoverContext" style="display: none; background-color:#2c2c2c;">Context</div>
+<div class="reactionsCont" id="reactionsCont">
+    <div id="emojiToggleContainer" onclick="toggleLikeDislike()" class="emojiToggleContainer">
+        <div class="emojiToggleText">👍</div>
+        <div class="emojiToggleText">👎</div>
+    </div>
+    <div class="flatList">
+        <!-- Reemplaza los elementos de FlatList según sea necesario -->
+        <!-- Los emojis se actualizarán dinámicamente según el estado -->
+    </div>
+</div> 
     <div id="contextMenu">
-        <p class="option" id="next">Reproducir a continuacion</li>
+        <p class="option" id="next">Reproducir a continuacion</p>
         <p class="option" id="row">agregar a la fila</p>
         <p class="option" id="initRadio">Iniciar Radio</p>
         <p class="option" id="addRadio">Agregar Radio</p>
@@ -281,8 +295,6 @@ if(isset($_GET["salir"])) {
                 </label>
             </nav>            
         </aside>
-    <div style="height: 4%; width:100%" ></div>
-
         <div class="cont" id="containerSec">
             <?php
                 include('./Sections/Screens/home2.php')

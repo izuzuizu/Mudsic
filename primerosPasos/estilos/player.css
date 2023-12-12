@@ -110,8 +110,6 @@ input#volume:checked + input[type="range"]{
     position: absolute;
     width: 170px;
     height: 205px;
-    top: -200px;
-    right: 200px;
     flex-direction: column;
     display: flex;
     justify-content: space-evenly;
@@ -123,6 +121,9 @@ input#volume:checked + input[type="range"]{
     box-shadow: 1px 1px 7px #0000006b;
     align-items: center;
     justify-content: center;
+    z-index: 12;
+    top: 59%;
+    left: 71%;
 }
 .reactionsCont .reaccion{
     width: 10px;
@@ -131,6 +132,9 @@ input#volume:checked + input[type="range"]{
 
 #emojiToggleContainer {
     display: flex;
+    z-index: 15;
+    left: 324px; 
+    top: 397px;
     align-items: center;
     margin-bottom: 15px;
     flex-direction: row;

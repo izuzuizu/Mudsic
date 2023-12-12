@@ -21,7 +21,7 @@
 </head>
 <body>
     <?php
-        if (isset($_SESSION['userId'])) {
+        if (isset($userId)) {
             echo '
                 <div id="homeSec" ></div>
             ';
