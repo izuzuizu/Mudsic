@@ -12,7 +12,7 @@ let todo = document.getElementById('todo');
 let cancionActual = 0;
 let clickVolumen = false
 let form = document.getElementById("reaccion");
-let emocion = document.getElementById('emotion')
+let emocion = document.getElementById('reaccionB')
 let song = document.getElementById('song')
 let songName = document.getElementById('nombreCancion')
 let artistName = document.getElementById('artistaCancion')
@@ -38,9 +38,10 @@ window.addEventListener('keydown', function (event) {
           volumenBajo()
         break;
         case ` `:
-          console.log(document.activeElement)
+          // event.preventDefault();
+          window.scrollBy(0, 0);
           if (musica.paused) {
-            if (document.activeElement.id == 'busqueda' || document.activeElement.id == 'namePlaylist' || document.activeElement.id == 'descPlaylist') {
+            if (document.activeElement.id == 'busquedaText' || document.activeElement.id == 'namePlaylist' || document.activeElement.id == 'descPlaylist') {
 
             }else{
               reproducir()
@@ -56,13 +57,13 @@ window.addEventListener('keydown', function (event) {
 });
 async function reaccionar() {
   let boton = document.getElementById('reaccionB')
-  emocion.value = 1
-  song.value= canciones[cancionActual].nombre
-  console.log('subiendo reaccion: '+emocion.value+' de '+song.value)
+  console.log(canciones[cancionActual])
+  // song.value= canciones[cancionActual].nombre
+  console.log('subiendo reaccion: emocion:'+emocion.value+' de '+canciones[cancionActual].nombre)
   // Enviar los datos del formulario mediante AJAX
-  let formData = new FormData(form);
-  let queryParams = new URLSearchParams(formData).toString();
-  let response = await fetch(`../primerosPasos/Functions/reaction.php?${queryParams}`, {
+  // let formData = new FormData(form);
+  // let queryParams = new URLSearchParams(formData).toString();
+  let response = await fetch(`../primerosPasos/Functions/reaction.php?emocionId=${emocion.value}&songId=${canciones[cancionActual].idBD}`, {
     method: 'GET'
   });
 }
@@ -108,7 +109,11 @@ function volumenBajo () {
   }
 }
 function abrirVolumen() {
-  volumen.style.display = 'block' //esto se cumple cuando se toca el boton que abre el input rango del volumen
+  if (volumen.style.display == 'block') {
+    volumen.style.display = 'none' //esto se cumple cuando se toca el boton que abre el input rango del volumen  
+  } else {
+    volumen.style.display = 'block' //esto se cumple cuando se toca el boton que abre el input rango del volumen  
+  }
 }
 function repetir() {
   console.log(musica.played)
@@ -137,39 +142,46 @@ rango.addEventListener('click',
       clickRango = true
     }
 )
-async function agregarALaFila(url, imagen, nombre, artista, duracion, album) {
+async function agregarALaFila(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
     url: url,
     imagen: imagen,
     nombre: nombre,
     artista: artista,
     album: album,
-    duracion: duracion
+    duracion: duracion,
+    idBD:idBD
   };
   canciones.push(cancion);
 }
-async function nuevaCancion(url, imagen, nombre, artista, duracion, album) {
+async function nuevaCancion(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
     url: url,
     imagen: imagen,
     nombre: nombre,
     artista: artista,
     album: album,
-    duracion: duracion
+    duracion: duracion,
+    idBD:idBD
   };
   canciones.push(cancion);
   cancionActual = canciones.length-1
+  
+  musica.src = canciones[cancionActual].url
+  musica.volume=1;
+  musica.load()
   reproducir()
   actualizar()
 }
-async function siguienteCancion(url, imagen, nombre, artista, duracion, album) {
+async function siguienteCancion(url, imagen, nombre, artista, duracion, album, idBD) {
   let cancion = {
     url: url,
     imagen: imagen,
     nombre: nombre,
     artista: artista,
     album: album,
-    duracion: duracion
+    duracion: duracion,
+    idBD:idBD
   };
   canciones.splice((cancionActual+1), 0 , cancion);
   actualizar()
@@ -179,11 +191,14 @@ async function reproducirSiguienteCancion() {
   cancionActual++;
   if (cancionActual > (canciones.length-1)) {
     cancionActual = 0; // Reinicia al comienzo de la lista si llega al final
-  }  
+  }else{
+  }
   musica.src=canciones[cancionActual].url
   musica.load();
   reproducir()
   actualizar()
+  await interaccion('Cancion', canciones[cancionActual].nombre, canciones[cancionActual].idBD)
+
 }
 function actualizar() {
   imagenSong.src = canciones[cancionActual].imagen
@@ -202,27 +217,22 @@ function actualizar() {
 }
 function reproducirAnteriorCancion() {
   if (musica.currentTime<5) {
-    
-  if (cancionActual>0) {
-  cancionActual= cancionActual-1;
+    if (cancionActual>0) {
+    cancionActual= cancionActual-1;
+    }
   }
-  }
-  
   if (cancionActual > canciones.length) {
     cancionActual = 0; // Reinicia al comienzo de la lista si llega al final
+  }else{
+    musica.src=canciones[cancionActual].url
+    musica.load();
+    reproducir()
+    actualizar()
   }
-  musica.src=canciones[cancionActual].url
-
-  // musica.innerHTML = `
-  // <source src ="${canciones[cancionActual].url}" type ="audio/mpeg" preload="auto">
-  // `
-  musica.load();
-  reproducir()
-  actualizar()
 }
 musica.addEventListener('ended', async function() {
   await reproducirSiguienteCancion();
-  await interaccion('Cancion', canciones[cancionActual].nombre)
+  await interaccion('Cancion', canciones[cancionActual].nombre, canciones[cancionActual].idBD)
   actualizar()
 });
 musica.ontimeupdate = function() {
@@ -237,7 +247,6 @@ musica.ontimeupdate = function() {
       reproducir()
     });
   }
-
   if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('seekforward', function() {
       avanzar()
@@ -248,7 +257,7 @@ musica.ontimeupdate = function() {
       retroceder()
     });
   }
-  if (canciones.length >0) {
+  if (canciones.length >1) {
   if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('nexttrack', function() {
       reproducirSiguienteCancion()
@@ -263,8 +272,6 @@ musica.ontimeupdate = function() {
   }
     
   }
-  
-
     navigator.mediaSession.metadata = new MediaMetadata({
       title: canciones[cancionActual].nombre,
       artist: canciones[cancionActual].artista,
@@ -319,6 +326,11 @@ musica.ontimeupdate = function() {
   }else{
     minutos = time.innerHTML
   }
+  if (seconds.toString().length == 1) {
+    seconds = "0"+seconds
+  }else{
+    seconds = seconds
+  }
   minutos = `${minutos}:${Math.floor(seconds)}`
   time.innerHTML = minutos
   if (clickVolumen == true) {
@@ -331,3 +343,84 @@ musica.ontimeupdate = function() {
     time.innerHTML = `00:00`
   }
 };
+    const emojisPositive = ['👍', '😍', '👍', '😈', '🤣', '😄', '🥳', '😴', '👹', '🚀'];
+    const emojisNegative = ['👎', '🤮', '💔', '😭', '😡', '😭'];
+
+    // Define el estado actual
+    let currentState = 'positive'; // Puede ser 'positive' o 'negative'
+
+    // Llama a la función para cargar inicialmente los emojis positivos
+    updateEmojiList();
+
+    function toggleLikeDislike() {
+        // Obtiene el contenedor de emoji activo
+        const activeEmojiContainer = document.querySelector('.emojiToggleContainer');
+
+        // Cambia el estado y actualiza el contenedor de emoji activo
+        currentState = currentState === 'positive' ? 'negative' : 'positive';
+        updateActiveEmojiContainer(activeEmojiContainer);
+
+        // Actualiza la lista de emojis en el menú
+        updateEmojiList();
+    }
+    function updateActiveEmojiContainer(emojiContainer) {
+        // Actualiza el contenido del contenedor de emoji según el estado actual
+        emojiContainer.innerHTML = currentState === 'positive'
+            ? `<div class="emojiToggleText activeEmoji">${emojisPositive[0]}</div><div class="emojiToggleText">${emojisNegative[0]}</div>`
+            : `<div class="emojiToggleText">${emojisPositive[0]}</div><div class="emojiToggleText activeEmoji">${emojisNegative[0]}</div>`;
+    }
+    function updateEmojiList() {
+        // Obtiene el contenedor de la lista de emojis
+        const emojiListContainer = document.querySelector('.flatList');
+
+        // Actualiza la lista de emojis según el estado actual
+        const emojis = currentState === 'positive' ? emojisPositive : emojisNegative;
+
+        // Crea el HTML para la lista de emojis
+        const emojiListHTML = emojis.map(emoji => `<div class="item" onclick="handleItemClick('${emoji}')"><div class="itemEmoji">${emoji}</div></div>`).join('');
+
+        // Actualiza el contenido del contenedor de la lista de emojis
+        emojiListContainer.innerHTML = emojiListHTML;
+    }
+    function abrirReacciones() {
+        var checkbox = document.getElementById("reactions");
+        checkbox.checked = !checkbox.checked;
+        openModal();
+    }
+    // Ejemplo de cómo usar la función en un botón o evento
+    const toggleButton = document.getElementById('toggleButton');
+    toggleButton.addEventListener('click', toggleLikeDislike);
+
+    // function openModal() {
+    //     // document.getElementById("reactionsCont").style.display = "flex";         
+    //     // var botonReaccion = document.getElementById("reaccionB");
+        
+    // }
+    function openModal() {
+        var config = document.getElementById("reactionsCont");
+        var checkbox = document.getElementById("reactions");
+
+        // Si el checkbox está marcado, establece la opacidad en 1, de lo contrario, en 0.5
+        config.style.display = checkbox.checked ? "flex" : "none";
+         
+    }
+    document.addEventListener('click', function(event) {
+        if (event.target === checkbox) {
+        }else{
+            config.style.display = 'none'
+        }
+    });
+    var botonReaccion = document.getElementById("reaccionB");
+    
+    document.addEventListener('click', function(event) {
+      console.log(event.target)
+        if (event.target === botonReaccion) {
+            document.getElementById("reactionsCont").style.display = 'none'
+        }else{
+            document.getElementById("reactionsCont").style.display = 'none'
+        }
+    });  
+    function handleItemClick(item) {
+        console.log(item);
+        openModal();
+  }

@@ -19,9 +19,19 @@
         $albumData = mysqli_stmt_get_result($stmt);
         $row = mysqli_fetch_assoc($albumData);
         $albumImg = $row['imgAlbum'];
+        $album = $row['nombre'];
         $albumLength= $row['canciones'];
         $albumDuracion= $row['duracion'];
-
+        
+        $sql="SELECT * from albumes_artistas Where albumes_id = '$albumId'";
+        $albumBd = mysqli_query($conexion, $sql);
+        $row = mysqli_fetch_assoc($albumBd);
+        $idBdArtist = $row['id'];
+        $sql="SELECT * from artistas Where id = '$idBdArtist'";
+        $albumBd = mysqli_query($conexion, $sql);
+        $row = mysqli_fetch_assoc($albumBd);
+        $artist = $row['nombre'];
+        $artistId = $row['artista_idSpotify'];
         
         $stmt = mysqli_prepare($conexion, "SELECT * from canciones Where album = ?");
         mysqli_stmt_bind_param($stmt, "s", $albumId);
@@ -51,9 +61,10 @@
     <h1 id="album" ><?php echo $album ?></h1>
     <h4>de </h4>
     <h4 id="artist" ><?php echo $artist ?></h4>
+    
     <?php
         while ($row = mysqli_fetch_assoc($canciones)) {
-        $idSong = $row['id'];
+        $idSong = $row['idSpotify'];
         $previewLink = $row['previewUrl'];
         $nombre = $row['nombre'];
         $duracion = $row['duracion'];
@@ -81,9 +92,11 @@
                 <img id="imgS'.$i.'" src="'.$albumImg.'" style="width:50%; height:50%" alt="">
                 <p id="name'.$i.'">'.$nombre.'</p>
                 <p id="artist'.$i.'">'.$artist.'</p>
-                <p id="dur'.$i.'">'.$duracion.'</p>
-                <p id="albumSong'.$i.'">'.$album.'</p>
-                <p id="artistaId">'.$artist.'</p>
+                <p style="display: none;" id="dur'.$i.'">'.$duracion.'</p>
+                <p style="display: none;" id="albumSong'.$i.'">'.$album.'</p>
+                <p style="display: none;" id="artistaId">'.$artist.'</p>
+                <p style="display: none;" id="artistaIdSong'.$i.'">'.$artistId.'</p>
+                <p style="display: none;"  id="songBD'.$i.'">'.$idSong.'</p>
             </div> 
             ';
             $i+=1;

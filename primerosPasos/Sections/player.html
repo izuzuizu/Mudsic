@@ -1,4 +1,262 @@
-  <div class="container" align = "center">
+<style style="display: none">
+  *{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.playerMin{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 60px;
+    background-color: rgb(20, 20, 20);
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 40px;
+    position: fixed;
+    bottom: 0;
+    z-index: 1000;
+    color: white;
+}
+.reproductor{    
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+    align-items: center;    
+}
+.left{
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+}
+.dataSong{
+    width: 23%;
+    display: flex;
+    align-content: center;
+    justify-content: start;
+    height: 100%;
+    align-items: center;
+}
+.titleAndName{
+    display: flex;
+    flex-direction: column;
+    margin-left: 11px;
+    height: 100%;
+    width: auto;
+    justify-content: center;
+    
+}
+.titleAndName p#nombreCancion{
+    font-weight: 800;
+    font-size: 1.1rem;
+}
+section#time{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+section#time input{
+    width: 90%;
+}
+.times{
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+}
+.times h1{
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+.right{
+    width: 280px;
+    height: 40px;
+}
+.player{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: aliceblue;
+    border-radius: 10px;
+    padding: 10px 8px;
+    align-items: center;
+}
+
+.player button img{
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+.player button{
+    width: 30px;
+    height: 30px;
+    background-color: aliceblue;
+    border-style: none;
+
+}
+.player input[type="range"]{
+    position: absolute;
+    transform: rotateZ(270deg);
+    right: 0px;
+    top: -60px;
+    display: none;
+}
+input#volume:checked + input[type="range"]{
+    display: flex;
+}
+.reactionsCont{
+    position: absolute;
+    width: 170px;
+    height: 205px;
+    top: -200px;
+    right: 200px;
+    flex-direction: column;
+    display: none;
+    justify-content: space-evenly;
+    background-color: rgb(24, 24, 24);
+    padding: 5px;
+    font-size: 0.9rem;
+    /* display: none; */
+    border-radius: 15px;
+    box-shadow: 1px 1px 7px #0000006b;
+    align-items: center;
+    justify-content: center;
+}
+.reactionsCont .reaccion{
+    width: 10px;
+    height: 10px;
+}
+
+#emojiToggleContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-direction: row;
+    width: 90px;
+    height: 35px;
+    border-radius: 200px;
+    background-color: #292929;
+    justify-content: space-between;
+}
+
+.emojiToggleText {
+    color: white;
+    text-align: center;
+    line-height: 40px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    font-size: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.activeEmoji {
+    border-radius: 200px;
+    background-color: #3f3f3f;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    color: white;
+}
+
+.flatList {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+}
+
+.item {
+    width: 32.8px;
+    height: 32.8px;
+    background-color: #2e2e2e;
+    border-radius: 500px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    margin: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+}
+
+</style>
+<div class="playerMin">
+  <div class="reproductor">
+    <div class="left">
+      <div class="dataSong">
+        <audio id="actual">
+          <source src ="https://drive.google.com/uc?id=1HR2P7oxS973v41BvM-yag9PkqOn4T68C" type ="audio/mpeg" preload="auto">
+        </audio>
+        <audio id="siguiente">
+          <source src ="" type ="audio/mpeg">
+        </audio>
+        <img src="/" id="imagenCancion" style="width: 10%; height:10%" alt="">
+        <div class="titleAndName">
+          <p id="nombreCancion"></p>
+          <p id="artistaCancion"></p>
+        </div>
+      </div>
+      <section id="time" class="time">
+        <input type="range" min="0" max="100" step="1" value="0" id="barraDeProgreso"/>
+          <div class="times">
+            <h1 id="tiempo">00:00</h1>
+            <h1 id="reproducido">00:00</h1>
+          </div>            
+      </section>
+    </div>
+    <div class="right">
+ <div class="player">
+  <button id="reaccionB" class="nav" onclick="abrirReacciones()" value="1">
+    <img src="./imagenes/heart-solid.svg">
+    <input type="checkbox" name="" id="reactions" style="display: none;">
+</button>
+<div class="reactionsCont" id="reactionsCont">
+    <div id="emojiToggleContainer" onclick="toggleLikeDislike()" class="emojiToggleContainer">
+        <div class="emojiToggleText">👍</div>
+        <div class="emojiToggleText">👎</div>
+    </div>
+    <div class="flatList">
+        <!-- Reemplaza los elementos de FlatList según sea necesario -->
+        <!-- Los emojis se actualizarán dinámicamente según el estado -->
+    </div>
+</div> 
+        <button id="lista" class="nav">
+                <img src="./imagenes/list-solid.svg" alt="" srcset="">
+            </button>
+        <button id="retroceder" class="nav" onclick= "reproducirAnteriorCancion()">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Fast_forward_font_awesome.svg/2000px-Fast_forward_font_awesome.svg.png" width="40" height="40" style="  transform: rotate(180deg);">
+        </button>
+        <input type="checkbox" name="" id="play-pause" style="display: none;">
+        <button class="nav" onclick= "reproducir()">
+          <img src="./imagenes/pause.png" width="40" height="40" id="PP" width="40" height="40" id="PP" >
+        </button>
+        <button id="avanzar" class="nav" onclick="reproducirSiguienteCancion()">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Fast_forward_font_awesome.svg/2000px-Fast_forward_font_awesome.svg.png" width="40" height="40">
+        </button>
+        <button id="repetir" class="nav" onclick= "repetir()">
+          <img src="./imagenes/replay.png" width="40" height="40" />
+        </button>            
+        <button id="Vol" onclick="abrirVolumen()" for="volume">              
+          <img src="./imagenes/volume_medium.png" width="40" height="40" >
+        </button> 
+        <input type="checkbox" name="" id="volume" style="display: none">
+        <input  type="range" min="0" max="100" step="1" value="100" id="volumen" for="volume"/>
+
+      </div>
+    </div>
+  </div>
+</div>
+<script src="./Functions/player.js"></script>
+
+<!-- <div class="container">
     <audio id="actual">
     </audio>
     <audio id="next">
@@ -25,15 +283,28 @@
       <button id="avanzar" class="nav" onclick="reproducirSiguienteCancion()">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Fast_forward_font_awesome.svg/2000px-Fast_forward_font_awesome.svg.png" width="40" height="40">
       </button>
-      <button id="reaccionB" class="nav" onclick="reaccionar()" value=1>
-          <img src="./imagenes/like_icon.png" width="40" height="40" >
-      </button>
+      <button id="reaccionB" class="nav" onclick="abrirReacciones()" value="1">
+        <img src="./imagenes/face-smile-solid.svg">
+        <input type="checkbox" name="" id="reactions" style="display: none;">
+    </button>
+    <div class="reactionsCont" id="reactionsCont">
+        <div id="emojiToggleContainer" onclick="toggleLikeDislike()" class="emojiToggleContainer">
+            <div class="emojiToggleText">👍</div>
+            <div class="emojiToggleText">👎</div>
+        </div>
+        <div class="flatList">
+            <!-- Reemplaza los elementos de FlatList según sea necesario -->
+            <!-- Los emojis se actualizarán dinámicamente según el estado -->
+        <!-- </div>
+    </div>
       <button id="repetir" class="nav" onclick= "repetir()">
         <img src="./imagenes/replay.png" width="40" height="40" />
       </button>
+
+    
       <button id="Vol" onclick="abrirVolumen()">
         <input  type="range" min="0" max="100" step="1" value="100" id="volumen"/>
         <img src="./imagenes/volume_medium.png" width="40" height="40" >
       </button> 
-  </div>
-  <script src="./Functions/player.js"></script>
+  </div> -->
+  <!-- <script src="./Functions/player.js"></script> -->

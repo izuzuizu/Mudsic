@@ -40,6 +40,7 @@
                 $a.=', ';
             }
         }    
+        $a = substr($a, 0, -1); 
         for ($i=0; $i < count($generos) ; $i++) { 
         }
         $generos=$a
