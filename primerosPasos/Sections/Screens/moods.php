@@ -25,7 +25,7 @@
     </div>
 
     <?php
-    if(isset($_GET["feliz"])) {
+    // if(isset($_GET["feliz"])) {
 
         $sql = "SELECT cancion_id FROM emociones_usuarios WHERE emocion_id = 1"; 
         $datos = mysqli_query($conexion, $sql);
@@ -52,9 +52,9 @@
 
             }
         }
-    }
+    // }
 
-        if(isset($_GET["triste"])) {
+        // if(isset($_GET["triste"])) {
 
             $sql = "SELECT cancion_id FROM emociones_usuarios WHERE emocion_id = 2"; 
             $datos = mysqli_query($conexion, $sql);
@@ -80,7 +80,7 @@
     
                 }
             }
-        }
+        // }
 
     ?>
 </body>
