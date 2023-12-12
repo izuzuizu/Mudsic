@@ -2,7 +2,7 @@
 $server="localhost";
 $user= "root";
 $password="";
-$db="mudsic2";
+$db="mudsic";
 $conexion=mysqli_connect($server, $user, $password, $db)
 // $server="sql10.freemysqlhosting.net";
 // $user= "sql10669780";
