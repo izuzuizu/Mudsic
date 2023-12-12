@@ -29,14 +29,14 @@ db = mysql.connector.connect(
     # user="izuagus",
     # password="Paraphonico",
     # database="mudsic"
-    # host="localhost",
-    # user="root",
-    # password="",
-    # database="mudsic2"
-    host="sql10.freemysqlhosting.net",
-    user="sql10669780",
-    password="CYyx3CuqKd",
-    database="sql10669780"
+    host="localhost",
+    user="root",
+    password="",
+    database="mudsic2"
+    # host="sql10.freemysqlhosting.net",
+    # user="sql10669780",
+    # password="CYyx3CuqKd",
+    # database="sql10669780"
 )
 
 # cursor = db.cursor()

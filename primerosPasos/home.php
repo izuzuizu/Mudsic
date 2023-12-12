@@ -309,3 +309,4 @@ if(isset($_GET["salir"])) {
     <script src="./Functions/main.js"></script>
 </body>
 </html>
+</html>

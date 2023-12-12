@@ -1334,12 +1334,12 @@ async function goToHome(){
   console.log(results);
   let index = 0
   // for (let index = 0; index < 10; index++) {
-    while(secLenght<3){
+      try {
+    while(secLenght<3 && index < 2){
     const element = results[index];
 
     // await results.forEach(async (element)=>{
   // await Promise.all(results.map(async function(element) {
-      try {
     const data = {
         songId: element.idspotify
     };
@@ -1382,11 +1382,11 @@ async function goToHome(){
       }
       }
     }
+      index++
+  }
       } catch (error) {
         console.log(error)
       }
-      index++
-  }
   homeSec.innerHTML+=`
   <p id="canciones.length" style="display:none;" value="${songsLenght}">${songsLenght}</p>
   `;
