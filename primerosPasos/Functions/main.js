@@ -1338,7 +1338,7 @@ async function goToHome(){
   let index = 0
   // for (let index = 0; index < 10; index++) {
       try {
-    while(secLenght<3 && index < 2){
+    while(secLenght<3 && index < 10){
     const element = results[index];
 
     // await results.forEach(async (element)=>{

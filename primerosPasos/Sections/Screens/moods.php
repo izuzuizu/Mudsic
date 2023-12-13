@@ -35,16 +35,13 @@
             $sql = "SELECT * FROM emociones_usuarios WHERE emocion_id = '$emotionId'"; 
             $reactions = mysqli_query($conexion, $sql);
 
-            while ($usuarios=mysqli_fetch_assoc($reactions)) {
             echo '
             <div class="row">
-                <h2>'.$usuarios['emocion_id'].'</h2>
-                <div id="canciones'.$usuarios['emocion_id'].'" class="elementos">
+                <h2>'.$emotion['emoji'].'</h2>
+                <div id="canciones'.$emotion['emoji'].'" class="elementos">
             ';
+            while ($usuarios=mysqli_fetch_assoc($reactions)) {
                 $id_emocion = $usuarios["cancion_id"];
-                // echo $id_emocion;
-                // echo "<br>";
-
                 $sql2 = "SELECT * FROM canciones WHERE id = $id_emocion"; 
                 $datos2 = mysqli_query($conexion, $sql2);
 
@@ -53,9 +50,9 @@
                     $idSpotify = $canciones["idSpotify"];
                     $duracion = $canciones["duracion"];
                     $artistaId = $canciones["artista"];
-                    $artista = '';
                     $album = $canciones["album"];
                     $link = $canciones["previewUrl"];
+                    $artista = '';
                     $img='';
                     $sql = "SELECT * FROM artistas WHERE artista_idSpotify = '$artistaId'"; 
                     $datos3 = mysqli_query($conexion, $sql);
@@ -67,7 +64,6 @@
                     while ($albumSong=mysqli_fetch_assoc($datos4)) { 
                         $img = $albumSong['imgAlbum'];
                     }
-                    
                     echo '
                     <div class="elemento" id="cancion'.$songsLenght.'" value="'.$link.'">
                             <img id="imgS'.($songsLenght).'" src="'.$img.'" alt="">
@@ -82,13 +78,12 @@
                     </div> 
                     ';
                         $songsLenght++;
-
                 }
+            }
             echo '
             
             </div>
             </div>';
-            }
         }
 
         echo '
