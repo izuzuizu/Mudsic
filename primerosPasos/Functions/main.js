@@ -1273,9 +1273,7 @@ document.getElementById('Nindex').addEventListener('click', async function(e) {
 // });
 document.getElementById('Nemociones').addEventListener('click', async function(e) {
     e.preventDefault();
-    await cargarContenido(`../primerosPasos/Sections/Screens/moods.php`);
-    await cancionesPreview();
-    // await albumsPreview();
+    await goToMoods()
 });
 // document.getElementById('Nartistas').addEventListener('click', async function(e) {
 //     e.preventDefault();
@@ -1323,6 +1321,11 @@ async function addRowFromSong(params) {
       </div>
   </div>
   `;
+}
+async function goToMoods() {
+    await cargarContenido(`../primerosPasos/Sections/Screens/moods.php`);
+    await cancionesPreview();
+  
 }
 async function goToHome(){
   let secLenght = 0

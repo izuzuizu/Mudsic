@@ -27,59 +27,101 @@
     <?php
     // if(isset($_GET["feliz"])) {
 
-        $sql = "SELECT cancion_id FROM emociones_usuarios WHERE emocion_id = 1"; 
-        $datos = mysqli_query($conexion, $sql);
+        $sql = "SELECT * FROM emociones "; 
+        $emociones = mysqli_query($conexion, $sql);
+        $songsLenght =1;
+        while ($emotion=mysqli_fetch_assoc($emociones)) {    
+            $emotionId = $emotion['id'];
+            $sql = "SELECT * FROM emociones_usuarios WHERE emocion_id = '$emotionId'"; 
+            $reactions = mysqli_query($conexion, $sql);
 
-        while ($usuarios=mysqli_fetch_assoc($datos)) {
-            $id_emocion = $usuarios["cancion_id"];
-            echo $id_emocion;
-            echo "<br>";
+            while ($usuarios=mysqli_fetch_assoc($reactions)) {
+            echo '
+            <div class="row">
+                <h2>'.$usuarios['emocion_id'].'</h2>
+                <div id="canciones'.$usuarios['emocion_id'].'" class="elementos">
+            ';
+                $id_emocion = $usuarios["cancion_id"];
+                // echo $id_emocion;
+                // echo "<br>";
 
-            $sql2 = "SELECT * FROM canciones WHERE id = $id_emocion"; 
-            $datos2 = mysqli_query($conexion, $sql2);
+                $sql2 = "SELECT * FROM canciones WHERE id = $id_emocion"; 
+                $datos2 = mysqli_query($conexion, $sql2);
 
-            while ($canciones=mysqli_fetch_assoc($datos2)) { 
-                $nombre = $canciones["nombre"];
-                $duracion = $canciones["duracion"];
-                $artista = $canciones["artista"];
-                $album = $canciones["album"];
+                while ($canciones=mysqli_fetch_assoc($datos2)) { 
+                    $nombre = $canciones["nombre"];
+                    $idSpotify = $canciones["idSpotify"];
+                    $duracion = $canciones["duracion"];
+                    $artistaId = $canciones["artista"];
+                    $artista = '';
+                    $album = $canciones["album"];
+                    $link = $canciones["previewUrl"];
+                    $img='';
+                    $sql = "SELECT * FROM artistas WHERE artista_idSpotify = '$artistaId'"; 
+                    $datos3 = mysqli_query($conexion, $sql);
+                    $sql = "SELECT * FROM albumes WHERE album_idSpotify = '$album'"; 
+                    $datos4 = mysqli_query($conexion, $sql);
+                    while ($artistSong=mysqli_fetch_assoc($datos3)) { 
+                        $artista = $artistSong['nombre'];
+                    }
+                    while ($albumSong=mysqli_fetch_assoc($datos4)) { 
+                        $img = $albumSong['imgAlbum'];
+                    }
+                    
+                    echo '
+                    <div class="elemento" id="cancion'.$songsLenght.'" value="'.$link.'">
+                            <img id="imgS'.($songsLenght).'" src="'.$img.'" alt="">
+                        <div class="text">
+                            <p id="name'.($songsLenght).'">'.$nombre.'</p>
+                            <p id="artist'.($songsLenght).'">'.$artista.'</p>
+                            <p style="display: none;" id="dur'.($songsLenght).'">'.$duracion.'</p>
+                            <p style="display: none;" id="albumSong'.($songsLenght).'">'.$album.'</p>
+                            <p style="display: none;" id="artistaIdSong'.($songsLenght).'">'.$artistaId.'</p>
+                            <p style="display: none;" id="songBD'.($songsLenght).'">'.$idSpotify.'</p>
+                        </div>
+                    </div> 
+                    ';
+                        $songsLenght++;
 
-                
-                echo "<h2>$nombre</h2> 
-                      <p>$duracion</p>
-                      <p>$artista</p>
-                      <p>$album</p>";
-
+                }
+            echo '
+            
+            </div>
+            </div>';
             }
         }
+
+        echo '
+        <p id="canciones.length" value="'.$songsLenght.'">'.$songsLenght.'</p>
+        ';
     // }
 
         // if(isset($_GET["triste"])) {
 
-            $sql = "SELECT cancion_id FROM emociones_usuarios WHERE emocion_id = 2"; 
-            $datos = mysqli_query($conexion, $sql);
+            // $sql = "SELECT * FROM emociones_usuarios WHERE emocion_id = 2"; 
+            // $datos = mysqli_query($conexion, $sql);
     
-            while ($usuarios=mysqli_fetch_assoc($datos)) {
-                $id_emocion = $usuarios["cancion_id"];
-                echo $id_emocion;
-                echo "<br>";
+            // while ($usuarios=mysqli_fetch_assoc($datos)) {
+            //     $id_emocion = $usuarios["cancion_id"];
+            //     echo $id_emocion;
+            //     echo "<br>";
     
-                $sql2 = "SELECT * FROM canciones WHERE id = $id_emocion"; 
-                $datos2 = mysqli_query($conexion, $sql2);
+            //     $sql2 = "SELECT * FROM canciones WHERE id = $id_emocion"; 
+            //     $datos2 = mysqli_query($conexion, $sql2);
     
-                while ($canciones=mysqli_fetch_assoc($datos2)) { 
-                    $nombre = $canciones["nombre"];
-                    $duracion = $canciones["duracion"];
-                    $artista = $canciones["artista"];
-                    $album = $canciones["album"];
+            //     while ($canciones=mysqli_fetch_assoc($datos2)) { 
+            //         $nombre = $canciones["nombre"];
+            //         $duracion = $canciones["duracion"];
+            //         $artista = $canciones["artista"];
+            //         $album = $canciones["album"];
     
-                    echo "<h2>$nombre</h2> 
-                      <p>$duracion</p>
-                      <p>$artista</p>
-                      <p>$album</p>";
+            //         echo "<h2>$nombre</h2> 
+            //           <p>$duracion</p>
+            //           <p>$artista</p>
+            //           <p>$album</p>";
     
-                }
-            }
+            //     }
+            // }
         // }
 
     ?>
