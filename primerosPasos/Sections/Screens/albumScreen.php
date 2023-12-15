@@ -17,11 +17,12 @@
         mysqli_stmt_bind_param($stmt, "s", $albumId);
         mysqli_stmt_execute($stmt);
         $albumData = mysqli_stmt_get_result($stmt);
-        $row = mysqli_fetch_assoc($albumData);
-        $albumImg = $row['imgAlbum'];
-        $album = $row['nombre'];
-        $albumLength= $row['canciones'];
-        $albumDuracion= $row['duracion'];
+        while ($row = mysqli_fetch_assoc($albumData)) {
+            $albumImg = $row['imgAlbum'];
+            $album = $row['nombre'];
+            $albumLength= $row['canciones'];
+            $albumDuracion= $row['duracion'];
+        }
         
         $sql="SELECT * from albumes_artistas Where albumes_id = '$albumId'";
         $albumBd = mysqli_query($conexion, $sql);
@@ -65,6 +66,7 @@
     <?php
         while ($row = mysqli_fetch_assoc($canciones)) {
         $idSong = $row['idSpotify'];
+        $albumId = $row['album'];
         $previewLink = $row['previewUrl'];
         $nombre = $row['nombre'];
         $duracion = $row['duracion'];
@@ -93,7 +95,7 @@
                 <p id="name'.$i.'">'.$nombre.'</p>
                 <p id="artist'.$i.'">'.$artist.'</p>
                 <p style="display: none;" id="dur'.$i.'">'.$duracion.'</p>
-                <p style="display: none;" id="albumSong'.$i.'">'.$album.'</p>
+                <p style="display: none;" id="albumSong'.$i.'">'.$albumId.'</p>
                 <p style="display: none;" id="artistaId">'.$artist.'</p>
                 <p style="display: none;" id="artistaIdSong'.$i.'">'.$artistId.'</p>
                 <p style="display: none;"  id="songBD'.$i.'">'.$idSong.'</p>

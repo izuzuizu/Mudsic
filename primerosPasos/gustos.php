@@ -14,7 +14,7 @@ session_start();
         // $sql = "INSERT INTO usuarios (Nbr_u, Pass_u, Email_u, Img_u, token) VALUES ('$user', '$contrasenia', '$email', '$foto', '$token')";
         // $registrar= mysqli_query($conexion, $sql)? print("<script>console.log('usuario creado');</script>"): print('error al crear');
         // aca se tiene que hacer la subida a la base de datos
-        header('location: home.html');
+        header('location: home.php');
     }
 ?>
 <!DOCTYPE html>

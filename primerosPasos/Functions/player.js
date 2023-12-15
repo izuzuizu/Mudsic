@@ -446,7 +446,8 @@ musica.ontimeupdate = function() {
     async function handleItemClick(item) {
       let emotionId
         await consultBd('./Functions/getEmotions.php');
-        let results = getResultsBd();
+        let results = await getResultsBd();
+        console.log(results)
         results.forEach(async (emotion)=>{
           if (emotion.emoji == item) {
             console.log(item)
@@ -457,7 +458,7 @@ musica.ontimeupdate = function() {
                   songId: canciones[cancionActual].idBD
               };
               await postBd(`./Functions/getSong-IdSp.php`, data);
-              let results = getResultsBd();
+              let results = await getResultsBd();
               results.forEach(async (song)=>{
                 console.log(song.idspotify)
                 const data = {
@@ -465,7 +466,7 @@ musica.ontimeupdate = function() {
                   emotionId: emotionId
                 };
                 await postBd(`./Functions/setEmociones_usuarios.php`, data);
-                let results = getResultsBd();
+                let results = await getResultsBd();
                 console.log(results)
               })
             }else{
@@ -473,7 +474,7 @@ musica.ontimeupdate = function() {
                 songId: reactSong.songId
               };
               await postBd(`./Functions/getSong-IdSp.php`, data);
-              let results = getResultsBd();
+              let results = await getResultsBd();
               results.forEach(async (song)=>{
                 console.log(song)
                 const data = {
@@ -481,7 +482,7 @@ musica.ontimeupdate = function() {
                   emotionId: emotionId
                 };
                 await postBd(`./Functions/setEmociones_usuarios.php`, data);
-                let results = getResultsBd();
+                let results = await getResultsBd();
                 console.log(results)
                 abrirReacciones()
             })

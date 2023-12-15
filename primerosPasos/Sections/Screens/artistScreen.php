@@ -58,7 +58,7 @@
                 <h4>Popularidad: '.$popularidad.'</h4>
                 <p>Generos: '.$generos.'</p>';
         ?>
-        <div id="topCanciones"></div>
+        <div id="topCanciones" class="elementos"></div>
     </div>
 <?php
     $i =0;

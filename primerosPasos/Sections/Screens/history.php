@@ -34,7 +34,7 @@
                 $img='';
                 $artistName='';
                 $artistId='';
-                $albumName= '';
+                $albumId= '';
                 $tipo = $todo['tipo'];
                 $nombre = $todo['nombre'];
                 $time = $todo['horario'];
@@ -60,7 +60,7 @@
                             $sql3 = "SELECT * from albumes WHERE album_idSpotify ='$albumId'";
                             $albumes= mysqli_query($conexion, $sql3);
                             while ($albume = mysqli_fetch_assoc($albumes)) {
-                                $albumName= $albume['nombre'];
+                                $albumId= $albume['album_idSpotify'];
                                 $img = $albume['imgAlbum'];
                             }
                             $cancionesL +=1;
@@ -72,7 +72,7 @@
                                         <p id="artist'.$cancionesL.'">'.$artistName.'</p>
                                     </div>
                                     <p style="display: none" id="dur'.$cancionesL.'">'.$duracion.'</p>
-                                    <p style="display: none" id="albumSong'.$cancionesL.'">'.$albumName.'</p>
+                                    <p style="display: none" id="albumSong'.$cancionesL.'">'.$albumId.'</p>
                                     <p style="display: none" id="artistaId">'.$artistId.'</p>
                                     <p style="display: none;" id="artistaIdSong'.$cancionesL.'">'.$artistId.'</p>
                                     <p style="display: none" id="timeSong'.$cancionesL.'" >'.$time.'</p>

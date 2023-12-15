@@ -6,14 +6,15 @@ if (isset($_SESSION['userId'])) {
     $id = $_SESSION['userId'];
     $nombre = $_SESSION['user'];
 }else{
-    session_start();
+    session_abort();
 }
-
 $sql= "SELECT * FROM usuarios WHERE ID_u='$id'";
 $datos=mysqli_query($conexion, $sql);
-$usuarios=mysqli_fetch_assoc($datos);
-
+while ($usuarios=mysqli_fetch_assoc($datos)) {
+    # code...
 $mail = $usuarios["Email_u"];
+}
+
 
 if(isset($_GET["cambiar_nombre"])) {
     echo '<form class="form" action="" method="post">

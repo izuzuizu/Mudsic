@@ -160,7 +160,10 @@ let nextButton = document.getElementById('avanzar')
 let prevButton = document.getElementById('retroceder')
 let reactActualSong = true
 let reactSong = {}
-
+const apiKeyLFM = '9d66f990777946bc7d28e61555e66c4b'; // Reemplaza esto con tu clave de API de Last.fm
+// Clave de API de YouTube
+// const apiKeyYT = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
+const apiKeyYT = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
 
 
 // function onBackButtonEvent(e){
@@ -241,7 +244,7 @@ function getAttributes(elementId) {
   }
   return attributes;
 }
-function getResultsBd() {
+async function getResultsBd() {
   let results=[]
   var paragraphs = resultsBd.getElementsByTagName('p');
   for (let index = 0; index < paragraphs.length; index++) {
@@ -295,7 +298,7 @@ setInterval(async () => {
 }, 36000000);
 async function getTopSongs(artistaId) {
   await getToken()
-  const topTracksResponse = await fetch(`https://api.spotify.com/v1/artists/${artistaId}/top-tracks?market=AR`, {
+  const topTracksResponse = await fetch(`https://api.spotify.com/v1/artists/${artistaId}/top-tracks?market=AR&limit=50`, {
       headers: {
         'Authorization': `Bearer ${accessToken}`
       }
@@ -338,6 +341,18 @@ async function getSongFromYTID(id) {
   }
 
 }
+async function getSongFromYT(cancion, artista){
+    // Construye la consulta de búsqueda
+    let consulta = `${cancion} ${artista} lyric`;
+    // Codifica la consulta para usarla en una URL
+    consulta = encodeURIComponent(consulta);
+    // Construye la URL de la solicitud a la API de búsqueda de YouTube
+    let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKeyYT}`;
+    // Realiza la solicitud a la API de búsqueda de YouTube
+    let respuesta = await fetch(url);
+    let datos = await respuesta.json();    
+    return datos
+}
 async function apiSecondOption(id){
   const url = `https://youtube-mp3-download-highest-quality1.p.rapidapi.com/ytmp3/ytmp3/custom/?url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3D${id}&quality=320`;
   const options = {
@@ -365,19 +380,7 @@ async function addRow(cancion, artista, duracion, imagen, album, idBD) {
   let cont = 0
   let resultado
   let repite = true
-  // Clave de API de YouTube
-  // const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
-  const apiKey = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
-
-  // Construye la consulta de búsqueda
-  let consulta = `${cancion} ${artista} lyric`;
-  // Codifica la consulta para usarla en una URL
-  consulta = encodeURIComponent(consulta);
-  // Construye la URL de la solicitud a la API de búsqueda de YouTube
-  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
-  // Realiza la solicitud a la API de búsqueda de YouTube
-  let respuesta = await fetch(url);
-  let datos = await respuesta.json();    
+  let datos = await getSongFromYT(cancion, artista)
   // Verifica si se encontraron resultados
   if (datos.items.length > 0) {
       // Devuelve el ID del primer video encontrado
@@ -411,21 +414,7 @@ async function cancionNext(cancion, artista, duracion, imagen, album, idBD) {//a
   let cont = 0
   let resultado
   let repite = true
-  
-  // Clave de API de YouTube
-  // const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
-  const apiKey = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
-
-  // Construye la consulta de búsqueda
-  let consulta = `${cancion} ${artista} lyric`;
-  // Codifica la consulta para usarla en una URL
-  consulta = encodeURIComponent(consulta);
-  // Construye la URL de la solicitud a la API de búsqueda de YouTube
-  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
-  // Realiza la solicitud a la API de búsqueda de YouTube
-  let respuesta = await fetch(url);
-  let datos = await respuesta.json();    
-  // Verifica si se encontraron resultados
+  let datos = await getSongFromYT(cancion, artista)
   if (datos.items.length > 0) {
       // Devuelve el ID del primer video encontrado
       while (repite == true) {
@@ -461,19 +450,7 @@ async function cancionNew(Cancion, artista, cancionDur, imagen, album, idBD) {
     let cont = 0
     let resultado
     let repite = true
-    // Clave de API de YouTube
-    // const apiKey = 'AIzaSyCVZIYMDF521pter4qDvE0fmDt2moONilw';
-    const apiKey = 'AIzaSyAsB0IXlHf06T_S3UTIFcVPawfwOxZhayI';
-    // Construye la consulta de búsqueda
-    let consulta = `${Cancion} ${artista} lyric`;
-    // Codifica la consulta para usarla en una URL
-    consulta = encodeURIComponent(consulta);
-    // Construye la URL de la solicitud a la API de búsqueda de YouTube
-    let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${consulta}&key=${apiKey}`;
-    // Realiza la solicitud a la API de búsqueda de YouTube
-    let respuesta = await fetch(url);
-    let datos = await respuesta.json();    
-    // Verifica si se encontraron resultados
+    let datos = await getSongFromYT(Cancion, artista)
     if (datos.items.length > 0) {
       // Devuelve el ID del primer video encontrado
     
@@ -798,7 +775,7 @@ async function openContextMenuSong(event, cancionName, artista, cancionDur, imag
               if (index<=3) {
                 index++;
                 let data5 = await getSong(song.name, ' ', song.artist.name);
-                await addRow(data5.name, data5.artists[0].name, data5.duration_ms, data5.album.images[0].url, data5.album.name, data5.id);
+                await cancionNext(data5.name, data5.artists[0].name, data5.duration_ms, data5.album.images[0].url, data5.album.name, data5.id);
               }
             }));
           }
@@ -829,12 +806,13 @@ async function openContextMenuSong(event, cancionName, artista, cancionDur, imag
           await goToArtista(artistaSongID)
           break;
         case 'goToAlbum':
-
-          await goToAlbum(artistaSongID)
+          console.log(album)
+          console.log(artista)
+          await goToAlbum('',artista,album)
           break;
         case 'addToPlaylist':
           await consultBd('./Functions/getPlaylists.php');
-          let playlists = getResultsBd();
+          let playlists = await getResultsBd();
           // console.log(playlists);
           let cont=0
           let conte = ' '
@@ -888,7 +866,7 @@ async function cancionesPreview() {
     imagen = imagen.src
   }
   let album = document.getElementById('albumSong'+index).innerHTML
-  let artistaIdSong = document.getElementById('artistaIdSong'+index).innerHTML
+  let artistaIdSong = document.getElementById(`artistaIdSong${index}`).innerHTML
   let cancion = document.getElementById('cancion'+index)
     cancion.addEventListener('click', async function() {
       clearInterval(intervalo);
@@ -901,11 +879,11 @@ async function cancionesPreview() {
           }
           }, 10);
       await cancionNew(cancionName, artista, cancionDur, imagen, album, idBD.innerHTML)
-    })
+    }, {once: true})
     cancion.addEventListener('contextmenu', async function(event) {
       event.preventDefault();
-      console.log(idBD.innerHTML)
-      await openContextMenuSong(event, cancionName, artista, cancionDur, imagen, album, artistaIdSong.innerHTML, idBD.innerHTML)
+      console.log(album)
+      await openContextMenuSong(event, cancionName, artista, cancionDur, imagen, album, artistaIdSong, idBD.innerHTML)
     });
     if (cancion.getAttribute('value') =='nulo') {
       cancion.addEventListener('mouseenter',function name() {
@@ -965,20 +943,20 @@ async function cancionesPreview() {
 async function albumsPreview(album, i) {//con fallas
   let albumNombre = document.getElementById(`albumName${i}`).innerHTML
   let nombreArtista = document.getElementById('artistaAlbum'+i).innerHTML
-  console.log(album)
+  // console.log(album)
 
   let albumId = album.getAttribute('value')
       if (nombreArtista==null||nombreArtista=='Nulo'||nombreArtista==='undefined') {
         nombreArtista = document.getElementById('Artista')
       }
   // console.log(nombreArtista)
-  console.log(album)
+  // console.log(album)
       let cantCancionesAlbum = document.getElementById('cantCancionesAlbum'+i)
       let songs = await getSongsFromAlbum(albumId);
       album.addEventListener('mouseenter', async function() {
       var aleatorio = Math.floor(Math.random() * (songs.length - 0) + 0);
       let song = await getSong(nombreArtista, albumNombre, songs[aleatorio])
-        if (song.preview_url == null  ) {
+        if (song.preview_url == null || song.preview_url == 'nulo' ) {
           console.log('sin preview limk')
           var aleatorio = Math.floor(Math.random() * (cantCancionesAlbum.innerHTML - 0) + 0);
           song = await getSong(nombreArtista, albumNombre.innerHTML, songs[aleatorio])
@@ -1189,7 +1167,6 @@ async function getSong(artistName, albumName, songName) {
   artistName = encodeURIComponent(artistName);
   albumName = encodeURIComponent(albumName);
   songName = encodeURIComponent(songName);
-  await getToken()
   const response = await fetch(`https://api.spotify.com/v1/search?q= ${artistName} ${songName} ${albumName}&type=track`, {
     headers: {
       'Authorization': `Bearer ${accessToken}`
@@ -1198,6 +1175,12 @@ async function getSong(artistName, albumName, songName) {
   const data = await response.json();
   const song = data.tracks.items[0];
   return song;
+}
+async function getTopTracksArtistLastFm(artistName) {
+  let response = await fetch(`http://ws.audioscrobbler.com/2.0/?method=artist.gettoptracks&artist=${artistName}&api_key=${API_KEY}&format=json`)
+    .then(response => response.json())
+    response= await response.json()
+  return response
 }
 async function getRelatedArtistsDeezer(artistName) {
   const response = await fetch(`https://api.deezer.com/search/artist/?q=${artistName}`);
@@ -1210,8 +1193,13 @@ async function getRelatedArtistsDeezer(artistName) {
   return relatedData.data;
 }
 async function getSongRecommendationsLFM(artist, track) {
-  const apiKey = '9d66f990777946bc7d28e61555e66c4b'; // Reemplaza esto con tu clave de API de Last.fm
-  const url = `http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track)}&api_key=${apiKey}&format=json`;
+  const url = `http://ws.audioscrobbler.com/2.0/?method=track.getsimilar&artist=${encodeURIComponent(artist)}&track=${encodeURIComponent(track)}&api_key=${apiKeyLFM}&format=json`;
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+}
+async function getArtistRecommendationsLFM(artist) {
+  const url = `http://ws.audioscrobbler.com/2.0/?method=artist.getsimilar&artist=${encodeURIComponent(artist)}&api_key=${apiKeyLFM}&format=json`;
   const response = await fetch(url);
   const data = await response.json();
   return data;
@@ -1228,6 +1216,16 @@ async function searchSong(busqueda) {
 }
 async function search(busqueda) {
     const url = `https://api.spotify.com/v1/search?q=${busqueda}&type=album,artist,playlist,track`;
+    const headers = {
+      'Authorization': ` Bearer ${accessToken}`
+    };
+    await fetch(url, { method: 'GET', headers: headers })
+      .then(response => response.json())
+      .then(data => {datos = data});
+      return datos
+}
+async function getArtist(artistName) {
+    const url = `https://api.spotify.com/v1/search?q=${artistName}&type=artist`;
     const headers = {
       'Authorization': ` Bearer ${accessToken}`
     };
@@ -1282,7 +1280,7 @@ document.getElementById('Nemociones').addEventListener('click', async function(e
 // });
 document.getElementById('Nplaylists').addEventListener('click', async function(e) {
     e.preventDefault();
-    goToPlaylists()
+    await goToPlaylists()
 });
 document.getElementById('Nhistorial').addEventListener('click', async function(e) {
     e.preventDefault();
@@ -1293,11 +1291,11 @@ document.getElementById('Nhistorial').addEventListener('click', async function(e
     let albumsCant = document.getElementById('albums.length') 
     for (let index = 1; index <= albumsCant.innerHTML; index++) {
       let album = document.getElementById('album'+index)
-      let albumNombre = document.getElementById('albumName'+index)
+      // let albumNombre = document.getElementById('albumName'+index)
       await albumsPreview(album, index)
       album.addEventListener('click', async function name(e) {
         e.preventDefault()
-        await goToAlbum(albumNombre.innerHTML, nombreArtista.innerHTML, album.getAttribute('value'));
+        await goToAlbum('', '', album.getAttribute('value'));
 
       });
   }
@@ -1322,132 +1320,198 @@ async function addRowFromSong(params) {
   </div>
   `;
 }
+async function addRowFromArtist(params) {
+  let homeSec = document.getElementById('homeSec')
+  homeSec.innerHTML +=`
+  <div class="row">
+      <h2>Similares a ${params}</h2>
+      <div id="canciones${params}" class="elementos">
+      </div>
+  </div>
+  `;
+}
 async function goToMoods() {
     await cargarContenido(`../primerosPasos/Sections/Screens/moods.php`);
     await cancionesPreview();
-  
 }
 async function goToHome(){
   let secLenght = 0
   await cargarContenido('../primerosPasos/Sections/Screens/home2.php');
   let homeSec = document.getElementById('homeSec')
+  let artistLenght = 0;
   let songsLenght = 0;
   await consultBd('./Functions/getLibrary.php');
-  let results = getResultsBd();
-  console.log(results);
+  let results = await getResultsBd();
+  // console.log(results);
   let index = 0
   // for (let index = 0; index < 10; index++) {
-      try {
-    while(secLenght<3 && index < 10){
-    const element = results[index];
+  try {
+    while(secLenght<5 && index < results.length){
+      const element = results[index];
+      await getToken()
+      if (element.type == 'Cancion') {      
+        // await results.forEach(async (element)=>{
+      // await Promise.all(results.map(async function(element) {
+        const data = {
+            songId: element.idspotify
+        };
+        await postBd(`./Functions/getSong-IdSp.php`, data);
+        let cancion = await getResultsBd();
+        // console.log(cancion);
+        if (cancion.length > 0) { 
+          const data2 = {
+              artistId: cancion[0].artistid
+          };
+          await postBd(`./Functions/getArtist-IdSp.php`, data2);
+          let artista = await getResultsBd();
+          // console.log(artista);
+          if (artista.length>0) {
+          let data4 = await getSongRecommendationsLFM(artista[0].name, cancion[0].name);
+          // console.log(data4);
+          if (!data4.error) {
+          let recommended = data4.similartracks.track
+          if (recommended.length>0) {
+            await addRowFromSong(element.name)
+            secLenght++
+            let elements = document.getElementById(`canciones${cancion[0].name}`);
+            await Promise.all(recommended.map(async function(song) {
+                let data5 = await getSong(song.name, ' ', song.artist.name);
+                songsLenght++;
+                elements.innerHTML+=`
+                    <div class="elemento" id="cancion${songsLenght}" value="${data5.preview_url}">
+                        <img id="imgS${songsLenght}" src="${data5.album.images[0].url}" alt="">
+                        <div class="text">
+                            <p id="name${songsLenght}">${data5.name}</p>
+                            <p id="artist${songsLenght}">${data5.artists[0].name}</p>
+                            <p style="display: none;" id="dur${songsLenght}">${data5.duration_ms}</p>
+                            <p style="display: none;" id="albumSong${songsLenght}">${data5.album.name}</p>
+                            <p style="display: none;" id="artistaIdSong${songsLenght}">${data5.artists[0].id}</p>
+                            <p style="display: none;" id="songBD${songsLenght}">${data5.id}</p>
+                        </div>
+                    </div> 
+                `;
+                await delay(1000)
 
-    // await results.forEach(async (element)=>{
-  // await Promise.all(results.map(async function(element) {
-    const data = {
-        songId: element.idspotify
-    };
-    await postBd(`./Functions/getSong-IdSp.php`, data);
-    let cancion = getResultsBd();
-    // console.log(cancion);
-    if (cancion.length > 0) { 
-      const data2 = {
-          artistId: cancion[0].artistid
-      };
-      await postBd(`./Functions/getArtist-IdSp.php`, data2);
-      let artista = getResultsBd();
-      // console.log(artista);
-      if (artista.length>0) {
-      let data4 = await getSongRecommendationsLFM(artista[0].name, cancion[0].name);
-      console.log(data4);
-      let recommended = data4.similartracks.track
-      if (recommended.length>0) {
-        await addRowFromSong(element.name)
-        secLenght++
-        let elements = document.getElementById(`canciones${cancion[0].name}`);
-        await Promise.all(recommended.map(async function(song) {
-            let data5 = await getSong(song.name, ' ', song.artist.name);
-            // console.log(data5);
-            elements.innerHTML+=`
-                <div class="elemento" id="cancion${songsLenght+1}" value="${data5.preview_url}">
-                    <img id="imgS${songsLenght+1}" src="${data5.album.images[0].url}" alt="">
-                    <div class="text">
-                        <p id="name${songsLenght+1}">${data5.name}</p>
-                        <p id="artist${songsLenght+1}">${data5.artists[0].name}</p>
-                        <p style="display: none;" id="dur${songsLenght+1}">${data5.duration_ms}</p>
-                        <p style="display: none;" id="albumSong${songsLenght+1}">${data5.album.name}</p>
-                        <p style="display: none;" id="artistaIdSong${songsLenght+1}">${data5.artists[0].id}</p>
-                        <p style="display: none;" id="songBD${songsLenght+1}">${data5.id}</p>
-                    </div>
-                </div> 
-            `;
-            songsLenght++;
-        }));
+            }));
+          }          
+          }
+          }
+        }
       }
+      
+      if (element.type == 'Artista') {      
+        // await results.forEach(async (element)=>{
+      // await Promise.all(results.map(async function(element) {
+          const data2 = {
+            artistId: element.idspotify
+          };
+          // console.log(element);
+          await postBd(`./Functions/getArtist-IdSp.php`, data2);
+          // await delay(2000)
+          let artista = await getResultsBd();
+          // console.log(artista);
+          if (artista.length>0) {
+          let data4 = await getArtistRecommendationsLFM(artista[0].name);
+          // console.log(data4);
+          if (!data4.error) {
+          let recommended = data4.similarartists.artist
+          if (recommended.length>0) {
+            await addRowFromArtist(artista[0].name)
+            secLenght++
+            let elements = document.getElementById(`canciones${artista[0].name}`);
+            await Promise.all(recommended.map(async function(artist) {
+                // console.log(artist);
+                await getToken()
+                // await delay(1000)
+                let data5 = await search(artist.name);
+                data5 = data5.artists.items[0]
+                artistLenght++;
+                // console.log(data5);
+                elements.innerHTML+=`
+                    <div class="elemento" id="artista${artistLenght}" value="${data5.id}">
+                        <img src="${data5 && data5.images && data5.images[0] && data5.images[0].url}" alt="">
+                        <div class="text">
+                          <p class="name" id="artista${artistLenght}name">${data5.name}</p>
+                          <p style="display: none;">Popularidad: ${data5.popularity}</p>
+                          <p class="generos">generos: ${data5.genres}</p>
+                        </div>
+                    </div> 
+                `;
+            }));
+          }          
+          }
+          }
       }
-    }
       index++
+    }
+  } catch (error) {
+    console.log(error)
   }
-      } catch (error) {
-        console.log(error)
-      }
   homeSec.innerHTML+=`
   <p id="canciones.length" style="display:none;" value="${songsLenght}">${songsLenght}</p>
+  <p style="display: none;" id="artistas.length" value="${artistLenght}">${artistLenght}</p>
+
   `;
   await cancionesPreview();
+  await artistasPreview();
 }
 async function goToAlbum(album, artista, id) {
   await cargarContenido(`../primerosPasos/Sections/Screens/albumScreen.php?album=${album}&artist=${artista}&albumId=${id}`)
-  await interaccion('Album', album, id)
+  let albumName = document.getElementById('album').innerHTML
+  await interaccion('Album', albumName, id)
   await cancionesPreview()
 }
 async function goToArtista(artistaId) {
-  await cargarContenido(`../primerosPasos/Sections/Screens/artistScreen.php?artistaId=${artistaId}`);
+  await cargarContenido(`./Sections/Screens/artistScreen.php?artistaId=${artistaId}`);
   let nombreArtista = document.getElementById('Artista')
   console.log(nombreArtista)
   await interaccion('Artista', nombreArtista.innerHTML, artistaId)
-      let canciones = await getTopSongs(artistaId)
+      let canciones = []
+      // canciones =  await getTopSongs(artistaId)
+      canciones =  await getTopTracksArtistLastFm(nombreArtista.innerHTML)
+      
       console.log(canciones)
       let cancioness = document.getElementById('topCanciones')
-      for (let index = 1; index <= canciones.length; index++) {
-        if (canciones.tracks[index].preview_url != null) {
+      let index =1
+      setTimeout(async () => {
+      // for (let index = 0; index <= canciones.length; index++) {
+        canciones.tracks.forEach(function(cancion) {
+
+        if (cancion.preview_url != null) {
         cancioness.innerHTML+=`
-        <style>
-            #cancion${index}{
-                background-color: green;
-            }
-        </style>
-          <div id="cancion${index}" value="${canciones.tracks[index].preview_url}" style="width:30%;">
-            <img id="imgS${index}" src="${canciones.tracks[index].album.images[2].url}" alt="">
-            <p id="name${index}">${canciones.tracks[index].name}</p>
-            <p id="artist${index}">${canciones.tracks[index].artists[0].name}</p>
-            <p id="dur${index}">${msToTime(canciones.tracks[index].duration_ms)}</p>
-            <p id="artistaId" style="display: none;">${canciones.tracks[index].artists[0].id}</p>
-            <p id="albumSong${index}"  style="display: none;">${canciones.tracks[index].album.id}</p>
+          <div id="cancion${index}" class="elemento" value="${cancion.preview_url}" style="width:30%;">
+            <img id="imgS${index}" src="${cancion.album.images[0].url}" alt="">
+            <div class="text">
+              <p id="name${index}">${cancion.name}</p>
+              <p id="artist${index}">${cancion.artists[0].name}</p>
+              <p id="dur${index}">${msToTime(cancion.duration_ms)}</p>
+              <p id="artistaIdSong${index}" style="display: none;">${cancion.artists[0].id}</p>
+              <p id="albumSong${index}"  style="display: none;">${cancion.album.id}</p>
+              <p style="display: none;" id="songBD${index}">${cancion.id}</p>
+
+            </div>
           </div> 
         `
         }else{
           cancioness.innerHTML+=`
-        <style>
-            #cancion${index}{
-                background-color:#7fc3ff;
-            }
-        </style>
-            <div id="cancion${index}" value="nulo" style="width:30%;">
-              <img src="${canciones.tracks[index].album.images[2].url}" alt="">
-              <p id="name${index}">${canciones.tracks[index].name}</p>
-              <p id="artist${index}">${canciones.tracks[index].artists[0].name}</p>
-              <p id="dur${index}">${msToTime(canciones.tracks[index].duration_ms)}</p>
-              <p id="artistaId"  style="display: none;">${canciones.tracks[index].artists[0].id}</p>
-              <p id="albumSong${index}"  style="display: none;">${canciones.tracks[index].album.id}</p>
-
+            <div id="cancion${index}" class="elemento" value="nulo" style="width:30%;">
+              <img id="imgS${index}" src="${cancion.album.images[0].url}" alt="">
+              <div class="text">
+                <p id="name${index}">${cancion.name}</p>
+                <p id="artist${index}">${cancion.artists[0].name}</p>
+                <p id="dur${index}">${msToTime(cancion.duration_ms)}</p>
+                <p id="artistaIdSong${index}"  style="display: none;">${cancion.artists[0].id}</p>
+                <p id="albumSong${index}"  style="display: none;">${cancion.album.id}</p>
+                <p style="display: none;" id="songBD${index}">${cancion.id}</p>
+              </div>
             </div> 
           `
         }
-      }
+        index++
+      })
       cancioness.innerHTML+=`
-      <p id="canciones.length">${canciones.length}</p>
+      <p style="display:none;" id="canciones.length">${index}</p>
       `
-      setTimeout(async () => {
         await cancionesPreview()
       }, 200);
   let albumsCant = document.getElementById('albums.length') 

@@ -77,7 +77,7 @@
                 } 
                 $cancion = $resultado['tracks']['items'][$i]['name'];
                 $artista = $resultado['tracks']['items'][$i]['artists'][0]['name'];
-                $album = $resultado['tracks']['items'][$i]['album']['name'];
+                $album = $resultado['tracks']['items'][$i]['album']['id'];
                 $link = $resultado['tracks']['items'][$i]['preview_url'];
                 $seconds = floor($resultado['tracks']['items'][$i]['duration_ms'] / 1000); // Convertir a segundos
                 $minutes = floor($seconds / 60); // Obtener el número de minutos

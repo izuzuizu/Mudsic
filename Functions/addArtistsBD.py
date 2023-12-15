@@ -53,9 +53,14 @@ sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager, requ
 # cursor.execute(check_query, ())
 # artist_exists = cursor.fetchone()[0] > 0
 
+# Verifica si el artista ya existe en la base de datos
+# check_query = "SELECT COUNT(*) FROM historial WHERE tipo = `busqueda` ORDER BY `id` DESC"
+# cursor.execute(check_query, (artist_id,))
+# artist_exists = cursor.fetchone()[0] > 0
+
 while True:
     # Realiza una búsqueda en la API de Spotify
-    query = 'dillom'
+    query = 'fermin ugarte'
     results = sp.search(query, limit=50, type='artist')
     for artist in results['artists']['items']:
         artist_id = artist['id']

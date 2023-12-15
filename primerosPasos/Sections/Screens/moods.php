@@ -45,7 +45,7 @@
                 $sql2 = "SELECT * FROM canciones WHERE id = $id_emocion"; 
                 $datos2 = mysqli_query($conexion, $sql2);
 
-                while ($canciones=mysqli_fetch_assoc($datos2)) { 
+                $canciones=mysqli_fetch_assoc($datos2);
                     $nombre = $canciones["nombre"];
                     $idSpotify = $canciones["idSpotify"];
                     $duracion = $canciones["duracion"];
@@ -54,6 +54,7 @@
                     $link = $canciones["previewUrl"];
                     $artista = '';
                     $img='';
+                    $albumId='';
                     $sql = "SELECT * FROM artistas WHERE artista_idSpotify = '$artistaId'"; 
                     $datos3 = mysqli_query($conexion, $sql);
                     $sql = "SELECT * FROM albumes WHERE album_idSpotify = '$album'"; 
@@ -62,6 +63,7 @@
                         $artista = $artistSong['nombre'];
                     }
                     while ($albumSong=mysqli_fetch_assoc($datos4)) { 
+                        $albumId= $albumSong['album_idSpotify'];
                         $img = $albumSong['imgAlbum'];
                     }
                     echo '
@@ -71,14 +73,14 @@
                             <p id="name'.($songsLenght).'">'.$nombre.'</p>
                             <p id="artist'.($songsLenght).'">'.$artista.'</p>
                             <p style="display: none;" id="dur'.($songsLenght).'">'.$duracion.'</p>
-                            <p style="display: none;" id="albumSong'.($songsLenght).'">'.$album.'</p>
+                            <p style="display: none;" id="albumSong'.($songsLenght).'">'.$albumId.'</p>
                             <p style="display: none;" id="artistaIdSong'.($songsLenght).'">'.$artistaId.'</p>
                             <p style="display: none;" id="songBD'.($songsLenght).'">'.$idSpotify.'</p>
                         </div>
                     </div> 
                     ';
                         $songsLenght++;
-                }
+                
             }
             echo '
             
